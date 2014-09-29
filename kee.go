@@ -27,9 +27,7 @@ func init() {
     }
     FPIID = fpiidCtrl{&fpiidOptions}
     APIID = apiidCtrl{&apiidOptions}
-    TOTP  = totpCtrl{&totpOptions, nil}
-
-
+    TOTP  = totpCtrl{&totpOptions}
     JUMBLE = jumCtrl{ 
         phrase: []jumWord{ 
             &jumAdjectives{}, 
@@ -39,7 +37,6 @@ func init() {
         },
     }
 }
-
 
 type handler struct {
     repat string

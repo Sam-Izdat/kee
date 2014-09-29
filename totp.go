@@ -32,7 +32,6 @@ var totpOptions = totpConfig {
 
 type totpCtrl struct {
     Options         *totpConfig
-    validPasswords  []string
 }
 
 // Generate a new secretfmt
