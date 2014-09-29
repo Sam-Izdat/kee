@@ -4,7 +4,6 @@ import (
     "crypto/hmac"
     "crypto/sha1"
     "encoding/base32"
-    "fmt"
     "strings"
     "time"
     "regexp"
