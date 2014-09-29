@@ -107,7 +107,6 @@ func (id *totp) MakePassword() ([]uint32, error) {
     // Value must always come from B32 string and not slice directly
     var sec string
     if id.b32 != "" { sec = id.b32 } else { sec = id.B32() }    // critical
-    fmt.Println("DDD", sec)
     sec = strings.Replace(sec, "-", "", -1)                     // remove dashes
     key, err := base32.StdEncoding.DecodeString(sec)
     if err != nil {
