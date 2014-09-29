@@ -215,11 +215,12 @@ type isbn struct {
 // Write any methods you need for your ID instances
 // e.g. compute checksum and compare it to check digit
 func (p isbn) Check() bool {
+    var m map[string]string = p.Map()
     var digits string = (
-        p.Map()["prefix"] + p.Map()["group"] + 
-        p.Map()["publisher"] + p.Map()["title"])
+        m["prefix"] + m["group"] + 
+        m["publisher"] + m["title"])
     var sum, weight, tmp int
-    var checkdigit, _ = strconv.Atoi(p.Map()["checksum"])
+    var checkdigit, _ = strconv.Atoi(m["checksum"])
     if checkdigit == 0 { checkdigit = 10}
     for k, v := range digits {
         if (k + 1) % 2 == 0 {
