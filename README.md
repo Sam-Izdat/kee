@@ -14,9 +14,7 @@ Grab the package with:
 
     $ go get github.com/Sam-Izdat/kee
 
-###Status
-
-[![Build Status](https://drone.io/github.com/Sam-Izdat/kee/status.png)](https://drone.io/github.com/Sam-Izdat/kee/latest)
+Status: [![Build Status](http://drone.io/github.com/Sam-Izdat/kee/status.png)](https://drone.io/github.com/Sam-Izdat/kee/latest)
 
 ##Basic usage
 
