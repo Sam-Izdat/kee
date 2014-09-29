@@ -2,7 +2,7 @@
 
 ...is a golang single-package library for dealing with resource identifiers and the wacky things they do. 
 
-It handles UUIDs/GUIDs, integer identifiers and custom IDs with regular grammar. It also does TOTBs (time-based one time passwords), because that's vaguely related, fits the API and makes the name kind of a pun. Oh, and it generates incoherent nonsense too, if that's your thing.
+It handles UUIDs/GUIDs, integer identifiers and custom IDs with regular grammar. It also does TOTPs (time-based one time passwords), because that's vaguely related, fits the API and makes the name kind of a pun. Oh, and it generates incoherent nonsense too, if that's your thing.
 
 ##Why?
 
