@@ -63,13 +63,13 @@ func (id GenericID) Map() map[string]string {
 func (p handler) Parse(s string) (GenericID, error) {
     res := make(map[string]string)
     re, err := regexp.Compile(p.repat)
+    if err != nil { return GenericID{}, err }
     names := re.SubexpNames()
     result := re.FindStringSubmatch(s)
     for k, v := range result {
         if k == 0 { continue }
         res[string(names[k])] = string(v)
     }
-    if err != nil { return GenericID{}, err }
 
     inst := GenericID{
         idStr: s,
