@@ -241,8 +241,7 @@ func main() {
         // => ISBN-13 978-0-306-40615-7 <nil>
 
     // Verify check digit
-    fmt.Println(idb.Check())
-    // => true
+    fmt.Println(idb.Check()) // => true
 }
 ```
 What's provided is really just scaffolding for anyone wishing to follow the conventions above for convenience, consistency and improved code readability. More functionality may be added on later.
