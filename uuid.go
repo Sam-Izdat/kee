@@ -300,7 +300,7 @@ func (id KUUID) Variant() uuidVariant {
     panic("unreachable")
 }
 
-// Version returns the verison of uuid.  It returns false if uuid is not
+// Version returns the verison of uuid.  It returns 0 if uuid is not
 // valid.
 func (id KUUID) Version() (uuidVersion) {
     bytes := id.slc

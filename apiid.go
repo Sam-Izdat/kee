@@ -64,7 +64,7 @@ func (c APIIDCtrl) Decode(s string) (KAPIID, error) {
 
 // -- Produce --
 
-// String is alias for KAPIID.B58()
+// String is alias for B58()
 func (id KAPIID) String() string {
     return id.B58()
 }

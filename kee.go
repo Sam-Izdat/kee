@@ -48,7 +48,8 @@ func init() {
     }
 }
 
-type handler struct {
+// Handler is a handler for custom IDs. Use NewHandler to instantiate.
+type Handler struct {
     repat string
     tmpl string
 }
@@ -70,7 +71,7 @@ func (id GenericID) Map() map[string]string {
 }
 
 // Parses s using supplied regexp and returns GenericID instance
-func (p handler) Parse(s string) (GenericID, error) {
+func (p Handler) Parse(s string) (GenericID, error) {
     res := make(map[string]string)
     re, err := regexp.Compile(p.repat)
     if err != nil { return GenericID{}, err }
@@ -90,7 +91,7 @@ func (p handler) Parse(s string) (GenericID, error) {
 }
 
 // Composes m using supplied template and returns GenericID instance
-func (p handler) Compose(m map[string]string) (GenericID, error) {
+func (p Handler) Compose(m map[string]string) (GenericID, error) {
     var res string
     var buf bytes.Buffer
 
@@ -110,6 +111,6 @@ func (p handler) Compose(m map[string]string) (GenericID, error) {
 }
 
 // NewHandler returns a custom ID handler with provided pattern and template
-func NewHandler(repat string, tmpl string) handler {
-    return handler{repat, tmpl}
+func NewHandler(repat string, tmpl string) Handler {
+    return Handler{repat, tmpl}
 }
