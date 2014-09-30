@@ -17,6 +17,7 @@ Grab the package with:
 
 [![Build Status](http://drone.io/github.com/Sam-Izdat/kee/status.png)](https://drone.io/github.com/Sam-Izdat/kee/latest) 
 [![License MIT](http://img.shields.io/badge/license-MIT-red.svg?style=flat-square)](http://opensource.org/licenses/MIT)
+[![GoDoc](https://godoc.org/github.com/Sam-Izdat/kee?status.svg)](https://godoc.org/github.com/Sam-Izdat/kee)
 
 ##Basic usage
 
