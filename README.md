@@ -1,3 +1,4 @@
+
 ![KEE dot GO](doc/logo.png)
 
 ...is a golang single-package library for dealing with resource identifiers and the wacky things they do. 
@@ -14,7 +15,8 @@ Grab the package with:
 
     $ go get github.com/Sam-Izdat/kee
 
-Status: [![Build Status](http://drone.io/github.com/Sam-Izdat/kee/status.png)](https://drone.io/github.com/Sam-Izdat/kee/latest)
+[![Build Status](http://drone.io/github.com/Sam-Izdat/kee/status.png)](https://drone.io/github.com/Sam-Izdat/kee/latest) 
+[![License MIT](http://img.shields.io/badge/license-MIT-red.svg?style=flat-square)](http://opensource.org/licenses/MIT)
 
 ##Basic usage
 
