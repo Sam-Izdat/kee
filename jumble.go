@@ -66,6 +66,8 @@ func (j *JUMCtrl) New(sylAdj, sylNoun, sylVerb, sylAdv int) (KJUMBLE, error) {
     return KJUMBLE{phrase, space}, nil
 }
 
+// KJUMBLE type represents a word jumble phrase.
+// It is exported only for reference and should be instantiated through its handler's methods.
 type KJUMBLE struct {
     phrase string
     space uint64

@@ -11,7 +11,8 @@ import (
     "net/url"
 )
 
-// TOTP (RFC 6238)
+// KTOTP type represents a secret capable of producing time-based one time passwords. (RFC 6238)
+// It is exported only for reference and should be instantiated through its handler's methods.
 type KTOTP struct {
     slc []byte
     b32 string

@@ -9,7 +9,9 @@ import(
     "fmt"
 )
 
-// UUID (RFC 4122)
+
+// KUUID type represents a Universally unique identifier. (RFC 4122)
+// It is exported only for reference and should be instantiated through its handler's methods.
 type KUUID struct {
     slc []byte
     hex string
