@@ -18,7 +18,7 @@ func TestUUIDNew(t *testing.T) {
         id := kee.UUID.New()
 
         Convey("The type returned should be 'kee.uuid'", func() {
-            So(fmt.Sprintf("%T",id), ShouldEqual, "kee.uuid")
+            So(fmt.Sprintf("%T",id), ShouldEqual, "kee.KUUID")
         })
 
         Convey("Encoding it", func() {
