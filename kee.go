@@ -1,3 +1,4 @@
+// Package kee simplifies generating, parsing, composing, encoding and decoding resource identifiers
 package kee
 
 import (
@@ -58,7 +59,6 @@ type GenericID struct {
     idMap map[string]string
 }
 
-
 // String returns canonical string representation of the ID
 func (id GenericID) String() string {
     return id.idStr
@@ -69,7 +69,7 @@ func (id GenericID) Map() map[string]string {
     return id.idMap
 }
 
-// Parses s using supplied regexp and returns custom ID instance
+// Parses s using supplied regexp and returns GenericID instance
 func (p handler) Parse(s string) (GenericID, error) {
     res := make(map[string]string)
     re, err := regexp.Compile(p.repat)
@@ -89,7 +89,7 @@ func (p handler) Parse(s string) (GenericID, error) {
     return inst, nil
 }
 
-// Composes m using supplied template and returns custom ID instance
+// Composes m using supplied template and returns GenericID instance
 func (p handler) Compose(m map[string]string) (GenericID, error) {
     var res string
     var buf bytes.Buffer

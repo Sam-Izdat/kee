@@ -72,7 +72,7 @@ func (c uuidCtrl) Set(arr [16]byte) uuid {
     return res
 }
 
-// Parses UUID from string and returns UUID "object"
+// Decodes UUID from string and returns UUID "object"
 func (c uuidCtrl) Decode(s string) (uuid, error) {
     var bytes []byte
     var err error
