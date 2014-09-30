@@ -92,7 +92,7 @@ func (c uuidCtrl) Decode(s string) (uuid, error) {
     case 36, 36+9:
         bytes, err = c.fromHex(s)
     default:
-        return c.newInst([]byte{}, errors.New("Unrecognized UUID encoding"))
+        return c.newInst([]byte{}, errors.New("unrecognized UUID encoding"))
     }
     return c.newInst(bytes, err)
 }

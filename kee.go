@@ -7,15 +7,14 @@ import (
 )
 
 var (
-    UUID uuidCtrl
-    FPIID fpiidCtrl
-    APIID apiidCtrl
-    TOTP totpCtrl
-    JUMBLE jumCtrl
+    UUID uuidCtrl   // Handler for creating Universally Unique Identifiers
+    FPIID fpiidCtrl // Handler for creating Fixed Precision Integer Identifiers
+    APIID apiidCtrl // Handler for creating Arbitrary Precision Integer Identifiers
+    TOTP totpCtrl   // Handler for One-time Time Based Passwords
+    JUMBLE jumCtrl  // Handler for word-jumble identifiers
 )
 
 func init() {
-    // Handler for creating Universally Unique Identifiers
     UUID = uuidCtrl{
         &uuidOptions,
         map[string]string{ // Namespaces for Version 3 and 5
@@ -25,18 +24,10 @@ func init() {
             "X500":    "6ba7b814-9dad-11d1-80b4-00c04fd430c8",
             "NIL":     "00000000-0000-0000-0000-000000000000",
         },
-    }
-
-    // Handler for creating Fixed Precision Integer Identifiers
+    }    
     FPIID = fpiidCtrl{&fpiidOptions}
-
-    // Handler for creating Arbitrary Precision Integer Identifiers
     APIID = apiidCtrl{&apiidOptions}
-
-    // Handler for One-time Time Based Passwords
     TOTP  = totpCtrl{&totpOptions}
-
-    // Handler for word-jumble identifiers
     JUMBLE = jumCtrl{ 
         phrase: []jumWord{ 
             &jumAdjectives{}, 
@@ -52,19 +43,19 @@ type handler struct {
     tmpl string
 }
 
-// Generic ID type for custom identifiers
+// GenericID type is for custom identifiers
 type GenericID struct {
     idStr string
     idMap map[string]string
 }
 
 
-// Returns canonical string representation
+// String returns canonical string representation of the ID
 func (id GenericID) String() string {
     return id.idStr
 }
 
-// Returns a map of specified ID values
+// Map returns a map of ID values specfied by handler's regex
 func (id GenericID) Map() map[string]string {
     return id.idMap
 }
