@@ -15,7 +15,7 @@ var node struct {
 // NodeInterface returns the name of the interface from which the NodeID was
 // derived.  The interface "user" is returned if the NodeID was set by
 // SetNodeID.
-func (_ uuidCtrl) NodeInterface() string {
+func (_ UUIDCtrl) NodeInterface() string {
 	return node.ifname
 }
 
@@ -25,7 +25,7 @@ func (_ uuidCtrl) NodeInterface() string {
 // is returned.
 //
 // SetNodeInterface never fails when name is "".
-func (c uuidCtrl) SetNodeInterface(name string) bool {
+func (c UUIDCtrl) SetNodeInterface(name string) bool {
 	if node.interfaces == nil {
 		var err error
 		node.interfaces, err = net.Interfaces()
@@ -58,7 +58,7 @@ func (c uuidCtrl) SetNodeInterface(name string) bool {
 
 // NodeID returns a slice of a copy of the current Node ID, setting the Node ID
 // if not already set.
-func (c uuidCtrl) NodeID() []byte {
+func (c UUIDCtrl) NodeID() []byte {
 	if node.nodeID == nil {
 		c.SetNodeInterface("")
 	}
@@ -70,7 +70,7 @@ func (c uuidCtrl) NodeID() []byte {
 // SetNodeID sets the Node ID to be used for Version 1 UUIDs.  The first 6 bytes
 // of id are used.  If id is less than 6 bytes then false is returned and the
 // Node ID is not set.
-func (c uuidCtrl) SetNodeID(id []byte) bool {
+func (c UUIDCtrl) SetNodeID(id []byte) bool {
 	if c.setNodeID(id) {
 		node.ifname = "user"
 		return true
@@ -78,7 +78,7 @@ func (c uuidCtrl) SetNodeID(id []byte) bool {
 	return false
 }
 
-func (_ uuidCtrl) setNodeID(id []byte) bool {
+func (_ UUIDCtrl) setNodeID(id []byte) bool {
 	if len(id) < 6 {
 		return false
 	}

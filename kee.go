@@ -9,24 +9,24 @@ import (
 
 var (
     // UUID handler for creating Universally Unique Identifiers
-    UUID uuidCtrl   
+    UUID UUIDCtrl   
 
     // FPIID handler for creating Fixed Precision Integer Identifiers
-    FPIID fpiidCtrl 
+    FPIID FPIIDCtrl 
 
     // APIID handler for creating Arbitrary Precision Integer Identifiers
-    APIID apiidCtrl 
+    APIID APIIDCtrl 
 
     // TOTP handler for One-time Time Based Passwords
-    TOTP totpCtrl   
+    TOTP TOTPCtrl   
 
     // JUMBLE handler for word-jumble identifiers
-    JUMBLE jumCtrl  
+    JUMBLE JUMCtrl  
 )
 
 func init() {
-    UUID = uuidCtrl{
-        &uuidOptions,
+    UUID = UUIDCtrl{
+        &UUIDOptions,
         map[string]string{ // Namespaces for Version 3 and 5
             "DNS":     "6ba7b810-9dad-11d1-80b4-00c04fd430c8",
             "URL":     "6ba7b811-9dad-11d1-80b4-00c04fd430c8",
@@ -35,10 +35,10 @@ func init() {
             "NIL":     "00000000-0000-0000-0000-000000000000",
         },
     }    
-    FPIID = fpiidCtrl{&fpiidOptions}
-    APIID = apiidCtrl{&apiidOptions}
-    TOTP  = totpCtrl{&totpOptions}
-    JUMBLE = jumCtrl{ 
+    FPIID = FPIIDCtrl{&FPIIDOptions}
+    APIID = APIIDCtrl{&APIIDOptions}
+    TOTP  = TOTPCtrl{&TOTPOptions}
+    JUMBLE = JUMCtrl{ 
         phrase: []jumWord{ 
             &jumAdjectives{}, 
             &jumNouns{}, 

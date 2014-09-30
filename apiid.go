@@ -4,7 +4,8 @@ import (
     "math/big"
 )
 
-// APIID (no standard)
+// KAPIID type represents an arbitrary precision integer identifier.
+// It is exported only for reference and should be instantiated through its handler's methods.
 type KAPIID struct {
     slc []byte
     b58 string
@@ -15,70 +16,74 @@ type apiidConfig struct {
     Cache bool
 }
 
-var apiidOptions = apiidConfig {
+// APIIDOptions defines the configuration used by the `kee.APIID` handler.
+// Options can also be changed through `kee.APIID.Options`.
+var APIIDOptions = apiidConfig {
     Cache: true,            // Cache APIID strings, ignore new options
 }
 
-type apiidCtrl struct {
+// APIIDCtrl is a struct for the APIID handler. 
+// Unless another handler with different options is needed simply use instance `kee.APIID`.
+type APIIDCtrl struct {
     Options *apiidConfig
 }
 
-// Takes string rep. of arbitrary precision integer and return APIID "object"
-func (c apiidCtrl) FromString(s string) KAPIID {
+// FromString takes string representation of arbitrary precision integer and return KAPIID instance
+func (c APIIDCtrl) FromString(s string) KAPIID {
     i := new(big.Int)
     i.SetString(s, 10)
     return KAPIID{slc: i.Bytes(), bigInt: i}
 }
 
-// Takes 64-bit integer and return APIID "object"
-func (c apiidCtrl) FromInt(fpi uint64) KAPIID {
+// FromInt takes 64-bit integer and return KAPIID instance
+func (c APIIDCtrl) FromInt(fpi uint64) KAPIID {
     i := new(big.Int)
     i.SetUint64(fpi)
     return KAPIID{slc: i.Bytes(), bigInt: i}
 }
 
-// Takes big integer and return APIID "object"
-func (c apiidCtrl) FromBigInt(api *big.Int) KAPIID {
+// FromBigInt takes math/big Int and return KAPIID instance
+func (c APIIDCtrl) FromBigInt(api *big.Int) KAPIID {
     i := new(big.Int)
     i.Abs(api)
     return KAPIID{slc: i.Bytes(), bigInt: i}
 }
 
-// Takes an arbitrary length byte slice and returns APIID "object"
-func (c apiidCtrl) Set(slc []byte) KAPIID {
+// Set takes an arbitrary-length byte slice and returns KAPIID instance
+func (c APIIDCtrl) Set(slc []byte) KAPIID {
     i := new(big.Int)
     i.SetBytes(slc)
     return KAPIID{slc: i.Bytes(), bigInt: i}
 }
 
-// Decode APIID from base 58 string and returns APIID "object"
-func (c apiidCtrl) Decode(s string) (KAPIID, error) {
+// Decode takes base 58 encoded string of APIID and returns KAPIID instance
+func (c APIIDCtrl) Decode(s string) (KAPIID, error) {
     i, err := b58ToBigInt([]byte(s))
     return KAPIID{slc: i.Bytes(), bigInt: i}, err
 }
 
 // -- Produce --
 
-// Alias for KAPIID.B58()
+// String is alias for KAPIID.B58()
 func (id KAPIID) String() string {
     return id.B58()
 }
 
-// Returns FPIID as slice
+// Slc returns APIID as slice
 func (id KAPIID) Slc() []byte {
     return id.slc
 }
 
-// Returns FPIID as array
+// BigInt returns APIID as a math/big Int
 func (id KAPIID) BigInt() (res *big.Int) {
     if id.slc == nil || len(id.slc) == 0    { return new(big.Int) }
     return id.bigInt
 }
 
-// Returns FPIID as array
+// B58 returns base 58 encoded string representation of APIID
 func (id KAPIID) B58() (res string) {
     if id.slc == nil || len(id.slc) == 0    { return "" }
-    if apiidOptions.Cache && id.b58 != "" { return id.b58 }
+    if APIIDOptions.Cache && id.b58 != "" { return id.b58 }
     id.b58 = string(bigIntToB58(nil, id.bigInt))
     return id.b58
 }

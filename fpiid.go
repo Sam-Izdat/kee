@@ -8,7 +8,8 @@ import(
     "errors"
 )
 
-// FPIID (no standard)
+// KFPIID type represents a fixed precision integer identifier.
+// It is exported only for reference and should be instantiated through its handler's methods.
 type KFPIID struct {
     slc []byte
     b64 string
@@ -28,7 +29,9 @@ type fpiidConfig struct {
     PadB64, PadB32, HyphURL32 bool
 }
 
-var fpiidOptions = fpiidConfig {
+// FPIIDOptions defines the configuration used by the `kee.FPIID` handler.
+// Options can also be changed through `kee.FPIID.Options`.
+var FPIIDOptions = fpiidConfig {
     Cache: true,            // Cache FPIID strings, ignore new options
     ShortStr: true,         // Try conversion to uint32/16 for strings
     PadB64: true,           // Add padding to base 64 encoded FPIIDs
@@ -36,26 +39,28 @@ var fpiidOptions = fpiidConfig {
     HyphURL32: true,        // Hyphenate base 32 encoded URL FPIIDs
 }
 
-type fpiidCtrl struct {
+// FPIIDCtrl is a struct for the APIID handler. 
+// Unless another handler with different options is needed simply use instance `kee.FPIID`.
+type FPIIDCtrl struct {
     Options *fpiidConfig
 }
 
-// Takes a 8 byte array and returns a FPIID "object"
-func (c fpiidCtrl) FromInt(id uint64) KFPIID {
+// FromInt takes a [8]byte array and returns a KFPIID instance
+func (c FPIIDCtrl) FromInt(id uint64) KFPIID {
     bytes := make([]byte, 8)
     binary.LittleEndian.PutUint64(bytes, uint64(id))
     return KFPIID{slc: bytes}
 }
 
-// Takes a 8 byte array and returns a FPIID "object"
-func (c fpiidCtrl) Set(arr [8]byte) KFPIID {
+// Set takes an [8]byte array and returns a KFPIID instance
+func (c FPIIDCtrl) Set(arr [8]byte) KFPIID {
     bytes := make([]byte, 8)
     bytes = arr[:]
     return KFPIID{slc: bytes}
 }
 
-// Decodes FPIID from string and returns a FPIID "object"
-func (c fpiidCtrl) Decode(s string) (KFPIID, error) {
+// Decode takes encoded string of FPIID and returns KFPIID instance
+func (c FPIIDCtrl) Decode(s string) (KFPIID, error) {
     var bytes []byte
     var err error
     tmp := strings.Replace(s, "=", "", -1)
@@ -80,23 +85,23 @@ func (c fpiidCtrl) Decode(s string) (KFPIID, error) {
 
 // -- Produce --
 
-// Alias for KFPIID.URL64()
+// String is alias for KFPIID.URL64()
 func (id KFPIID) String() string {
     return id.URL64()
 }
 
-// Returns FPIID as slice
+// Slc returns FPIID as slice
 func (id KFPIID) Slc() []byte {
     return id.slc
 }
 
-// Returns FPIID as array
+// Arr returns FPIID as array
 func (id KFPIID) Arr() (res [8]byte) {
     copy(res[:], id.slc[:])
     return 
 }
 
-// Returns FPIID as unsigned 64 bit integer
+// Int returns FPIID as unsigned 64 bit integer
 func (id KFPIID) Int() (res uint64) {
     if id.slc == nil || len(id.slc) == 0 { return 0 }
     switch (len(id.slc)) {
@@ -112,57 +117,57 @@ func (id KFPIID) Int() (res uint64) {
     return
 }
 
-// Generates base 64 encoded string representation of FPIID
+// B64 returns base 64 encoded string representation of FPIID
 func (id *KFPIID) B64() string {
     if id.slc == nil || len(id.slc) == 0 { return "" }
-    if fpiidOptions.Cache && id.b64 != "" { return id.b64 }
+    if FPIIDOptions.Cache && id.b64 != "" { return id.b64 }
     var bytes []byte;
     copy(bytes, id.slc) 
-    if fpiidOptions.ShortStr { bytes = fpiidTrimBytes(id) }
+    if FPIIDOptions.ShortStr { bytes = fpiidTrimBytes(id) }
     res := base64.StdEncoding.EncodeToString(bytes)
-    if !fpiidOptions.PadB64 { res = strings.Replace(res, "=", "", -1) }
+    if !FPIIDOptions.PadB64 { res = strings.Replace(res, "=", "", -1) }
     id.b64 = res
     return id.b64
 }
 
-// Generates base 32 encoded string representation of FPIID
+// B32 returns base 32 encoded string representation of FPIID
 func (id *KFPIID) B32() string {
     if id.slc == nil || len(id.slc) == 0    { return "" }
-    if fpiidOptions.Cache && id.b32 != ""   { return id.b32 }
+    if FPIIDOptions.Cache && id.b32 != ""   { return id.b32 }
     var bytes []byte;
     copy(bytes, id.slc)
-    if fpiidOptions.ShortStr { bytes = fpiidTrimBytes(id) }
+    if FPIIDOptions.ShortStr { bytes = fpiidTrimBytes(id) }
     res := base32.StdEncoding.EncodeToString(bytes)
-    if !fpiidOptions.PadB32 { res = strings.Replace(res, "=", "", -1) }
+    if !FPIIDOptions.PadB32 { res = strings.Replace(res, "=", "", -1) }
     id.b32 = res
     return id.b32
 }
 
-// Generates a URL-safe base 64 representation FPIID
+// URL64 returns URL-safe base 64 string representation FPIID
 func (id *KFPIID) URL64() string {
     var res string
     if id.slc == nil || len(id.slc) == 0    { return "" }
-    if fpiidOptions.Cache && id.url64 != "" { return id.url64 }
-    if fpiidOptions.Cache && id.b64 != "" { res = id.b64 } else { res = id.B64() }
+    if FPIIDOptions.Cache && id.url64 != "" { return id.url64 }
+    if FPIIDOptions.Cache && id.b64 != "" { res = id.b64 } else { res = id.B64() }
     id.url64 = b64ToURL64(res)
     return id.url64
 }
 
-// Generates a URL-safe base 32 representation of FPIID with dashes
+// URL32 returns formatted, URL-safe base 32 string representation of FPIID
 func (id *KFPIID) URL32() string {
     var res string
     if id.slc == nil || len(id.slc) == 0    { return "" }
-    if fpiidOptions.Cache && id.url32 != "" { return id.url32 }
-    if fpiidOptions.Cache && id.b32 != "" { res = id.b32 } else { res = id.B32() }
+    if FPIIDOptions.Cache && id.url32 != "" { return id.url32 }
+    if FPIIDOptions.Cache && id.b32 != "" { res = id.b32 } else { res = id.B32() }
     res = strings.Replace(res, "=", "", -1)
-    if fpiidOptions.HyphURL32 { res = hyphenate(res, 4) }
+    if FPIIDOptions.HyphURL32 { res = hyphenate(res, 4) }
     id.url32 = res
     return id.url32
 }
 
 // -- Decode --
 
-func (_ fpiidCtrl) fromB64(s string, bLen, sLen int) ([]byte, error) {
+func (_ FPIIDCtrl) fromB64(s string, bLen, sLen int) ([]byte, error) {
     bytes := make([]byte, bLen/8)
     pieces := []string{url64ToB64(s)}
     for ; len(s) < sLen; sLen-- {
@@ -173,7 +178,7 @@ func (_ fpiidCtrl) fromB64(s string, bLen, sLen int) ([]byte, error) {
     return bytes, err
 }
 
-func (_ fpiidCtrl) fromB32(s string, bLen, sLen int) ([]byte, error) {
+func (_ FPIIDCtrl) fromB32(s string, bLen, sLen int) ([]byte, error) {
     bytes := make([]byte, bLen/8)
     s = strings.Replace(s, " ", "", -1)
     s = strings.Replace(s, "-", "", -1) 

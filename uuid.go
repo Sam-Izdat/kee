@@ -27,7 +27,9 @@ type uuidConfig struct {
     PadB64, PadB32, WrapA85, HyphURL32 bool
 }
 
-var uuidOptions = uuidConfig {
+// UUIDOptions defines the configuration used by the `kee.UUID` handler.
+// Options can also be changed through `kee.UUID.Options`.
+var UUIDOptions = uuidConfig {
     Cache: true,            // Cache UUID strings, ignore new options
     AllowInvalid: false,    // Allows setting of non-standard UUIDs
     MinVer: 1,              // Lowest UUID version allowed as valid
@@ -38,17 +40,19 @@ var uuidOptions = uuidConfig {
     HyphURL32: true,        // Hyphenate base 32 encoded URL UUIDs
 }
 
-type uuidCtrl struct {
+// UUIDCtrl is a struct for the UUID handler. 
+// Unless another handler with different options is needed simply use instance `kee.UUID`.
+type UUIDCtrl struct {
     Options *uuidConfig
     NS map[string]string    // Namespaces
 }
 
-func (c uuidCtrl) newInst(bytes []byte, err error) (KUUID, error) {
+func (c UUIDCtrl) newInst(bytes []byte, err error) (KUUID, error) {
     res := KUUID{slc: bytes}
     if err != nil { // A parsing or other unrecoverable error occured
         return KUUID{}, err
     }
-    if !uuidOptions.AllowInvalid && !res.IsValid() { 
+    if !UUIDOptions.AllowInvalid && !res.IsValid() { 
         if len(res.slc) > 0 && res.Arr() == [16]byte{} { 
             // Allow NIL UUID but return error if no override
             return res, errors.New("nil UUID set")
@@ -58,22 +62,22 @@ func (c uuidCtrl) newInst(bytes []byte, err error) (KUUID, error) {
     return res, nil
 }
 
-// Generates a random UUID and returns UUID "object" - alias for NewV4()
-func (c uuidCtrl) New() KUUID {
+// New is alias for NewV4; returns random Version 4 UUID and as KUUID instance
+func (c UUIDCtrl) New() KUUID {
     res, _ := c.NewV4() // swallows errors but none should occur
     return res
 }
 
-// Takes a 16 byte array and returns UUID "object"
-func (c uuidCtrl) Set(arr [16]byte) KUUID {
+// Set takes a [16]byte array and returns KUUID instance
+func (c UUIDCtrl) Set(arr [16]byte) KUUID {
     bytes := make([]byte, 16)
     bytes = arr[:]
     res, _ := c.newInst(bytes, nil)
     return res
 }
 
-// Decodes UUID from string and returns UUID "object"
-func (c uuidCtrl) Decode(s string) (KUUID, error) {
+// Decode takes encoded string of UUID and returns KUUID instance
+func (c UUIDCtrl) Decode(s string) (KUUID, error) {
     var bytes []byte
     var err error
     switch len(s) {
@@ -97,15 +101,16 @@ func (c uuidCtrl) Decode(s string) (KUUID, error) {
     return c.newInst(bytes, err)
 }
 
-func (_ uuidCtrl) Match(ida, idb KUUID) bool {
+// Match takes two KUUID instances; returns `true` if they are identical or false if not
+func (_ UUIDCtrl) Match(ida, idb KUUID) bool {
     return ida.Arr() == idb.Arr()
 }
 
-
+// IsValid returns true if the the UUID is valid according to settings, false if not
 func (id KUUID) IsValid() (valid bool) {
     if len(id.slc) != 16 { return false }
     ver := id.Version()
-    if uint8(ver) < uuidOptions.MinVer || uint8(ver) > uuidOptions.MaxVer { 
+    if uint8(ver) < UUIDOptions.MinVer || uint8(ver) > UUIDOptions.MaxVer { 
         return false 
     }
     return true
@@ -113,26 +118,26 @@ func (id KUUID) IsValid() (valid bool) {
 
 // -- Produce --
 
-// Alias for uuid.Hex()
+// String is alias for Hex
 func (id KUUID) String() string {
     return id.Hex()
 }
 
-// Returns UUID as slice
+// Slc returns UUID as slice
 func (id KUUID) Slc() []byte {
     return id.slc
 }
 
-// Returns UUID as array
+// Arr returns UUID as array
 func (id KUUID) Arr() (res [16]byte) {
     copy(res[:], id.slc[:])
     return 
 }
 
-// Generates canonical hex string representation, as in RFC 4122
+// Hex returns canonical hex string representation of UUID, as in RFC 4122
 func (id *KUUID) Hex() string {
     if id.slc == nil || len(id.slc) == 0    { return "" }
-    if uuidOptions.Cache && id.hex != ""    { return id.hex }
+    if UUIDOptions.Cache && id.hex != ""    { return id.hex }
     u := id.slc
     id.hex = fmt.Sprintf(
         "%08x-%04x-%04x-%04x-%012x",
@@ -140,65 +145,65 @@ func (id *KUUID) Hex() string {
     return id.hex
 }
 
-// Generates ASCII 85 encoded string representation of UUID
+// A85 returns ASCII 85 encoded string representation of UUID
 func (id *KUUID) A85() string {
     if id.slc == nil || len(id.slc) == 0    { return "" }
-    if uuidOptions.Cache && id.a85 != ""    { return id.a85 }
+    if UUIDOptions.Cache && id.a85 != ""    { return id.a85 }
     bytes := make([]byte, 20)
     ascii85.Encode(bytes, id.slc)
-    if uuidOptions.WrapA85 {
+    if UUIDOptions.WrapA85 {
         parts := []string{"<~", string(bytes[:]), "~>"}
         id.a85 = strings.Join(parts, "")
     } else { id.a85 = string(bytes) }    
     return id.a85
 }
-// Generates base 64 encoded string representation of UUID
+// B64 returns base 64 encoded string representation of UUID
 func (id *KUUID) B64() string {
     if id.slc == nil || len(id.slc) == 0    { return "" }
-    if uuidOptions.Cache && id.b64 != ""    { return id.b64 }
+    if UUIDOptions.Cache && id.b64 != ""    { return id.b64 }
     res := base64.StdEncoding.EncodeToString(id.slc)
-    if !uuidOptions.PadB64 { res = res[0:22] }
+    if !UUIDOptions.PadB64 { res = res[0:22] }
     id.b64 = res
     return id.b64
 }
 
-// Generates base 32 encoded string representation of UUID
+// B32 returns base 32 encoded string representation of UUID
 func (id *KUUID) B32() string {
     if id.slc == nil || len(id.slc) == 0    { return "" }
-    if uuidOptions.Cache && id.b32 != ""    { return id.b32 }
+    if UUIDOptions.Cache && id.b32 != ""    { return id.b32 }
     res := base32.StdEncoding.EncodeToString(id.slc)
-    if !uuidOptions.PadB32 { res = res[0:26] }
+    if !UUIDOptions.PadB32 { res = res[0:26] }
     id.b32 = res
     return id.b32
 }
 
-// Generates hex URN of UUID, as in RFC 2141
+// URN returns hex URN of UUID, as in RFC 2141
 func (id *KUUID) URN() string {
     if id.slc == nil || len(id.slc) == 0    { return "" }
-    if uuidOptions.Cache && id.urn != ""    { return id.urn }
+    if UUIDOptions.Cache && id.urn != ""    { return id.urn }
     res := []string{"urn:uuid:", id.Hex()}
     id.urn = strings.Join(res, "")
     return id.urn
 }
 
-// Generates a URL-safe base 64 representation UUID
+// URL64 returns URL-safe base 64 representation UUID
 func (id *KUUID) URL64() string {
     var res string
     if id.slc == nil || len(id.slc) == 0    { return "" }
-    if uuidOptions.Cache && id.url64 != ""  { return id.url64 }
-    if uuidOptions.Cache && id.b64 != "" { res = id.b64 } else { res = id.B64() }
+    if UUIDOptions.Cache && id.url64 != ""  { return id.url64 }
+    if UUIDOptions.Cache && id.b64 != "" { res = id.b64 } else { res = id.B64() }
     id.url64 = b64ToURL64(res)
     return id.url64
 }
 
-// Generates a URL-safe base 32 representation of UUID with dashes
+// URL32 returns formatted, URL-safe base 32 representation of UUID
 func (id *KUUID) URL32() string {
     var res string
     if id.slc == nil || len(id.slc) == 0    { return "" }
-    if uuidOptions.Cache && id.url32 != ""  { return id.url32 }
-    if uuidOptions.Cache && id.b32 != "" { res = id.b32 } else { res = id.B32() }
+    if UUIDOptions.Cache && id.url32 != ""  { return id.url32 }
+    if UUIDOptions.Cache && id.b32 != "" { res = id.b32 } else { res = id.B32() }
     res = strings.Replace(res, "=", "", -1)
-    if uuidOptions.HyphURL32 { res = hyphenate(res, 4) }
+    if UUIDOptions.HyphURL32 { res = hyphenate(res, 4) }
     id.url32 = res
     return id.url32
 }
@@ -206,7 +211,7 @@ func (id *KUUID) URL32() string {
 
 // -- Decode --
 
-func (_ uuidCtrl) fromA85(s string) ([]byte, error) {
+func (_ UUIDCtrl) fromA85(s string) ([]byte, error) {
     if len(s) == 24 { s = s[2:22] }
     if len(s) != 20 {
         return []byte{}, errors.New("string of UUID ASCII 85 is wrong length")
@@ -218,7 +223,7 @@ func (_ uuidCtrl) fromA85(s string) ([]byte, error) {
     return dst, nil
 }
 
-func (_ uuidCtrl) fromB64(s string) ([]byte, error) {
+func (_ UUIDCtrl) fromB64(s string) ([]byte, error) {
     s = url64ToB64(s)
     if len(s) == 22 { s = strings.Join([]string{s, "=="}, "") }
     if len(s) != 24 {
@@ -229,7 +234,7 @@ func (_ uuidCtrl) fromB64(s string) ([]byte, error) {
     return dst, nil
 }
 
-func (_ uuidCtrl) fromB32(s string) ([]byte, error) {
+func (_ UUIDCtrl) fromB32(s string) ([]byte, error) {
     s = strings.Replace(s, " ", "", -1)
     s = strings.Replace(s, "-", "", -1) 
     s = strings.Replace(s, "=", "", -1) 
@@ -247,7 +252,7 @@ func (_ uuidCtrl) fromB32(s string) ([]byte, error) {
 // Use of this source code is governed by a BSD-style
 // license that can be found in the LICENSE file.
 
-func (_ uuidCtrl) fromHex(s string) ([]byte, error) {
+func (_ UUIDCtrl) fromHex(s string) ([]byte, error) {
     if len(s) == 36+9 {
         if strings.ToLower(s[:9]) != "urn:uuid:" {
             return []byte{}, errors.New("string of UUID URN is malformed") 

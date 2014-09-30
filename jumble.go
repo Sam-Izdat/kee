@@ -31,12 +31,15 @@ type jumWord interface {
     getWords(syl int) []string
     randomWord(syl int) string
 }
-type jumCtrl struct {
+
+// JUMCtrl is a struct for the JUMBLE handler. 
+// Unless another handler is needed simply use instance `kee.JUMBLE`.
+type JUMCtrl struct {
     phrase []jumWord
     syls []int
 }
 
-func (j *jumCtrl) babble(syls []int) (string, uint64) {
+func (j *JUMCtrl) babble(syls []int) (string, uint64) {
     var (
         res, tmp string
         space uint64 = 1
@@ -52,10 +55,9 @@ func (j *jumCtrl) babble(syls []int) (string, uint64) {
     return res, space
 }
 
-// Generates a random phrase and returns KJUMBLE "object". 
-// Takes number of syllables for adjective, noun, verb, adverb respectively. 
-// Pass 0 for syllable count to skip word.
-func (j *jumCtrl) New(sylAdj, sylNoun, sylVerb, sylAdv int) (KJUMBLE, error) {
+// New generates a random phrase and returns KJUMBLE instance; takes number of syllables 
+// for adjective, noun, verb, adverb respectively. Pass 0 as syllable count to skip word.
+func (j *JUMCtrl) New(sylAdj, sylNoun, sylVerb, sylAdv int) (KJUMBLE, error) {
     syls := []int{sylAdj, sylNoun, sylVerb, sylAdv}
     for _, s := range syls {
         if s < 0 || s > 4 { return KJUMBLE{}, errors.New("bad syllable count") }
@@ -69,10 +71,12 @@ type KJUMBLE struct {
     space uint64
 }
 
+// String prints the phrase in camel case
 func (m KJUMBLE) String() string {
     return m.phrase
 }
 
+// SampleSpace returns the sample space (number of variations) possible for this phrase
 func (m KJUMBLE) SampleSpace() uint64 {
     return m.space
 }

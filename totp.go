@@ -22,33 +22,37 @@ type totpConfig struct {
     HyphB32 bool
 }
 
-var totpOptions = totpConfig {
+// TOTPOptions defines the configuration used by the `kee.TOTP` handler.
+// Options can also be changed through `kee.TOTP.Options`.
+var TOTPOptions = totpConfig {
     LookAhead: 1,           // Allow passwords from n future 30-second blocks
     LookBehind: 1,          // Allow passwords from n previous 30-second blocks
     B32Blocks: 8,           // Secret length (change will invalidate stored pws)
     HyphB32: true,          // Hyphenate base 32 encoded secrets
 }
 
-type totpCtrl struct {
+// TOTPCtrl is a struct for the TOTP handler. 
+// Unless another handler with different options is needed simply use instance `kee.TOTP`.
+type TOTPCtrl struct {
     Options         *totpConfig
 }
 
-// Generate a new secret
-func (c totpCtrl) New() KTOTP {
+// New generates a new secret and returns KTOTP instance
+func (c TOTPCtrl) New() KTOTP {
     bytes := make([]byte, 32)
     randomBits(bytes)
     return KTOTP{slc: bytes}
 }
 
-// Set an existing secret
-func (c totpCtrl) Set(bytes []byte) KTOTP {
+// Set loads an existing secret and returns KTOTP instance
+func (c TOTPCtrl) Set(bytes []byte) KTOTP {
     bytesSlc := make([]byte, 32)
     copy(bytesSlc[:], bytes[:])
     return KTOTP{slc: bytesSlc}
 }
 
-// Decode secret from base 32
-func (c totpCtrl) Decode(s string) (KTOTP, error) { 
+// Decode takes base 32 encoded string of secret and returns KTOTP instance 
+func (c TOTPCtrl) Decode(s string) (KTOTP, error) { 
     reg, err := regexp.Compile("[^A-Za-z0-9]+")
     if err != nil { return KTOTP{}, err }
     s = reg.ReplaceAllString(s, "")
@@ -60,25 +64,26 @@ func (c totpCtrl) Decode(s string) (KTOTP, error) {
     return KTOTP{b32: s}, nil // Conversion to byte value intentionally left for later
 }
 
-// Compare two secrets, return true if they match, false if no match
-func (c totpCtrl) MatchPasswords(exp []uint32, rec uint32) bool { 
+// MatchPasswords compares expected and received secrets, return true if they match, false if not
+func (c TOTPCtrl) MatchPasswords(exp []uint32, rec uint32) bool { 
     for i := 0; i < len(exp); i++ {
         if exp[i] == rec { return true }
     }
     return false
 }
 
-// Alias for KTOTP.B32()
+// String is alias for B32()
 func (id *KTOTP) String() string {
     return id.B32()
 }
 
-// Returns secret 32-byte slice
+// Slc returns secret as slice. This method is only meant to be used immediately after 
+// generating or loading a 32-byte secret to store it somewhere permanently.
 func (id *KTOTP) Slc() []byte {
     return id.slc
 }
 
-// Generates base 32 encoded string representation of secret
+// B32 returns base 32 encoded string representation of secret
 func (id *KTOTP) B32() string {
     var res string
     if id.b32 != "" { res = id.b32 } else { 
@@ -86,12 +91,12 @@ func (id *KTOTP) B32() string {
     }
     blocks := totpGetBlocks()
     res = res[0:blocks * 4]
-    if totpOptions.HyphB32 { res = hyphenate(res, 4) }
+    if TOTPOptions.HyphB32 { res = hyphenate(res, 4) }
     id.b32 = res
     return id.b32
 }
 
-// Returns URI with secret for QR code generation
+// URI returns Uniform Resource Identifier with secret for QR code generation
 func (id *KTOTP) URI(acct, issuer string) string {
     acct = url.QueryEscape(acct)
     issuer = url.QueryEscape(issuer)
@@ -101,6 +106,7 @@ func (id *KTOTP) URI(acct, issuer string) string {
 // The MIT License (MIT)
 // Copyright (c) 2014 Robbie Vanbrabant
 
+// MakePassword a slice of 6-digit time based passwords
 func (id *KTOTP) MakePassword() ([]uint32, error) {
     // Value must always come from B32 string and not slice directly
     var sec string
@@ -114,10 +120,10 @@ func (id *KTOTP) MakePassword() ([]uint32, error) {
     pwd := []uint32{0}
 
     pwd[0] = totpGetPassword(key, totpToBytes(epochSeconds/30))
-    for i := int64(1); i <= int64(totpOptions.LookBehind); i++ {
+    for i := int64(1); i <= int64(TOTPOptions.LookBehind); i++ {
         pwd = append(pwd, totpGetPassword(key, totpToBytes(epochSeconds/30 - i) ) )
     }
-    for i := int64(1); i <= int64(totpOptions.LookAhead); i++ {
+    for i := int64(1); i <= int64(TOTPOptions.LookAhead); i++ {
         pwd = append(pwd, totpGetPassword(key, totpToBytes(epochSeconds/30 + i) ) )
     }
     
@@ -127,7 +133,7 @@ func (id *KTOTP) MakePassword() ([]uint32, error) {
 // --- Helpers ---
 
 func totpGetBlocks() int {
-    blocks := totpOptions.B32Blocks
+    blocks := TOTPOptions.B32Blocks
     switch {
     case(blocks > 13):
         blocks = 13
