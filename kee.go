@@ -7,11 +7,20 @@ import (
 )
 
 var (
-    UUID uuidCtrl   // Handler for creating Universally Unique Identifiers
-    FPIID fpiidCtrl // Handler for creating Fixed Precision Integer Identifiers
-    APIID apiidCtrl // Handler for creating Arbitrary Precision Integer Identifiers
-    TOTP totpCtrl   // Handler for One-time Time Based Passwords
-    JUMBLE jumCtrl  // Handler for word-jumble identifiers
+    // Handler for creating Universally Unique Identifiers
+    UUID uuidCtrl   
+
+    // Handler for creating Fixed Precision Integer Identifiers
+    FPIID fpiidCtrl 
+
+    // Handler for creating Arbitrary Precision Integer Identifiers
+    APIID apiidCtrl 
+
+    // Handler for One-time Time Based Passwords
+    TOTP totpCtrl   
+    
+    // Handler for word-jumble identifiers
+    JUMBLE jumCtrl  
 )
 
 func init() {
