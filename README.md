@@ -272,12 +272,12 @@ What's provided is really just scaffolding for anyone wishing to follow the conv
 - Arbitrary-precision integers are really arbitrary in size just as their encoded versions are in length. If you plan on counting past eighteen quintillion or dividing by zero please mind the constraints and fasten appropriate protective head gear.
 ```go
     id := kee.APIID.New("18446744073709551615") 
-    fmt.Println(id.Int().Uint64())  // => 18446744073709551615
+    fmt.Println(id.BigInt().Uint64())  // => 18446744073709551615
     id = kee.APIID.New("18446744073709551616") // uint64 will overflow
-    fmt.Println(id.Int().Uint64())  // => 0
+    fmt.Println(id.BigInt().Uint64())  // => 0
     id = kee.APIID.New("28446744073709551616") 
-    fmt.Println(id.Int().Uint64())  // => 10000000000000000000
-    fmt.Println(id.Int())           // => 28446744073709551616
+    fmt.Println(id.BigInt().Uint64())  // => 10000000000000000000
+    fmt.Println(id.BigInt())           // => 28446744073709551616
 ```
 - Check that the server time is exactly correct when using time-based passwords.
 - Some JUMBLE words are quite long. If storing phrases in a database, allow for at least 100 characters. Unless words are omitted, the sample space is usually very large but still well below a UUID; checking for collisions is a good idea.
