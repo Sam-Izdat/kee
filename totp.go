@@ -33,13 +33,12 @@ type totpCtrl struct {
     Options         *totpConfig
 }
 
-// Generate a new secretfmt
+// Generate a new secret
 func (c totpCtrl) New() totp {
     bytes := make([]byte, 32)
     randomBits(bytes)
     return totp{slc: bytes}
 }
-
 
 // Set an existing secret
 func (c totpCtrl) Set(bytes []byte) totp {
