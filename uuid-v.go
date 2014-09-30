@@ -30,15 +30,15 @@ func (c uuidCtrl) NewV1() (uuid, error) {
 
     bytes := make([]byte, 16)
 
-    time_low := uint32(now & 0xffffffff)
-    time_mid := uint16((now >> 32) & 0xffff)
-    time_hi := uint16((now >> 48) & 0x0fff)
-    time_hi |= 0x1000 // Version 1
+    timeLow := uint32(now & 0xffffffff)
+    timeMid := uint16((now >> 32) & 0xffff)
+    timeHi := uint16((now >> 48) & 0x0fff)
+    timeHi |= 0x1000 // Version 1
 
-    binary.BigEndian.PutUint32(bytes[0:], time_low)
-    binary.BigEndian.PutUint16(bytes[4:], time_mid)
-    binary.BigEndian.PutUint16(bytes[6:], time_hi)
-    binary.BigEndian.PutUint16(bytes[8:], clock_seq)
+    binary.BigEndian.PutUint32(bytes[0:], timeLow)
+    binary.BigEndian.PutUint16(bytes[4:], timeMid)
+    binary.BigEndian.PutUint16(bytes[6:], timeHi)
+    binary.BigEndian.PutUint16(bytes[8:], clockSeq)
     copy(bytes[10:], node.nodeID)
 
     return c.newInst(bytes, nil)
@@ -46,7 +46,7 @@ func (c uuidCtrl) NewV1() (uuid, error) {
 
 // May need some refactoring
 func (c uuidCtrl) NewV2() (uuid, error) {
-    return uuid{}, errors.New("No.")
+    return uuid{}, errors.New("no")
 }
 
 // NewMD5 returns a new MD5 (Version 3) UUID based on the

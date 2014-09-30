@@ -25,7 +25,7 @@ const (
 var (
 	mu        sync.Mutex
 	lasttime  uint64 // last time we returned
-	clock_seq uint16 // clock sequence for this run
+	clockSeq uint16 // clock sequence for this run
 
 	timeNow = time.Now // for testing
 )
@@ -52,7 +52,7 @@ func getTime() (Time, error) {
 	t := timeNow()
 
 	// If we don't have a clock sequence already, set one.
-	if clock_seq == 0 {
+	if clockSeq == 0 {
 		setClockSequence(-1)
 	}
 	now := uint64(t.UnixNano()/100) + g1582ns100
@@ -60,7 +60,7 @@ func getTime() (Time, error) {
 	// If time has gone backwards with this clock sequence then we
 	// increment the clock sequence
 	if now <= lasttime {
-		clock_seq = ((clock_seq + 1) & 0x3fff) | 0x8000
+		clockSeq = ((clockSeq + 1) & 0x3fff) | 0x8000
 	}
 	lasttime = now
 	return Time(now), nil
@@ -81,13 +81,13 @@ func ClockSequence() int {
 }
 
 func clockSequence() int {
-	if clock_seq == 0 {
+	if clockSeq == 0 {
 		setClockSequence(-1)
 	}
-	return int(clock_seq & 0x3fff)
+	return int(clockSeq & 0x3fff)
 }
 
-// SetClockSeq sets the clock sequence to the lower 14 bits of seq.  Setting to
+// SetClockSequence sets the clock sequence to the lower 14 bits of seq.  Setting to
 // -1 causes a new sequence to be generated.
 func SetClockSequence(seq int) {
 	defer mu.Unlock()
@@ -101,9 +101,9 @@ func setClockSequence(seq int) {
 		randomBits(b[:]) // clock sequence
 		seq = int(b[0])<<8 | int(b[1])
 	}
-	old_seq := clock_seq
-	clock_seq = uint16(seq&0x3fff) | 0x8000 // Set our variant
-	if old_seq != clock_seq {
+	oldSeq := clockSeq
+	clockSeq = uint16(seq&0x3fff) | 0x8000 // Set our variant
+	if oldSeq != clockSeq {
 		lasttime = 0
 	}
 }

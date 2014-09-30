@@ -73,7 +73,7 @@ func (c fpiidCtrl) Decode(s string) (fpiid, error) {
     case 13:    // B32 uint64 // len 16 with pad
         bytes, err = c.fromB32(s, 64, 16)
     default:
-        return fpiid{slc: []byte{}}, errors.New("Unrecognized FPIID encoding")
+        return fpiid{slc: []byte{}}, errors.New("unrecognized FPIID encoding")
     }
     return fpiid{slc: bytes}, err
 }

@@ -173,7 +173,7 @@ These handlers share few common methods where appropriate -- at least in purpose
 
 - `Set()` takes a byte slice or a byte array representing an existing ID and manually assigns the ID instance its definitive value
 
-- `Decode()` derives the instance's value from some formatted or unformatted encoding (like hex, base 32, ascii 35, etc) representing an existing ID
+- `Decode()` derives the instance's value from some formatted or unformatted encoding (like hex, base 32, ASCII 35, etc) representing an existing ID
 
 You can extend functionality by writing your own handlers and two built-in methods are reserved just for such occasions:
 
@@ -260,7 +260,7 @@ What's provided is really just scaffolding for anyone wishing to follow the conv
 - Version 2 (DCE Security) UUIDs have been axed on account of being unnatural, easy to misuse and generally ridiculous.
 ```go
     if _, err := kee.UUID.NewV2(); err != nil {
-        fmt.Println(err) // => No.
+        fmt.Println(err) // => no
     }
 ```
 - A lot of UUID/GUID implementations ignore the RFC spec, just fill 16 bytes with random porridge and call it a day. This porridge will generally be rejected unless the right nibbles just happen to identify it as something it probably isn't. If you absolutely need to accept this porridge, set the `AcceptInvalid` option to `true`.

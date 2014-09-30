@@ -152,7 +152,6 @@ func totpToUint32(bytes []byte) uint32 {
         (uint32(bytes[2]) << 8) + uint32(bytes[3])
 }
 
-
 func totpGetPassword(key []byte, value []byte) uint32 {
     // sign the value using HMAC-SHA1
     hmacSha1 := hmac.New(sha1.New, key)

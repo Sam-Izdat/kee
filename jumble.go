@@ -38,8 +38,7 @@ type jumCtrl struct {
 
 func (j *jumCtrl) babble(syls []int) (string, uint64) {
     var (
-        res string = ""
-        tmp string = ""
+        res, tmp string
         space uint64 = 1
     )
 
@@ -59,7 +58,7 @@ func (j *jumCtrl) babble(syls []int) (string, uint64) {
 func (j *jumCtrl) New(sylAdj, sylNoun, sylVerb, sylAdv int) (jumble, error) {
     syls := []int{sylAdj, sylNoun, sylVerb, sylAdv}
     for _, s := range syls {
-        if s < 0 || s > 4 { return jumble{}, errors.New("Bad syllable count") }
+        if s < 0 || s > 4 { return jumble{}, errors.New("bad syllable count") }
     }
     phrase, space := j.babble(syls)
     return jumble{phrase, space}, nil
@@ -158,41 +157,40 @@ func (adv *jumAdverbs) readWords() {
     }
 }
 
-func (w jumAdjectives) getWords(syl int) []string {
-    if w.words == nil { return nil }
-    return w.words[syl]
+func (adj jumAdjectives) getWords(syl int) []string {
+    if adj.words == nil { return nil }
+    return adj.words[syl]
 }
 
-func (w jumNouns) getWords(syl int) []string {
-    if w.words == nil { return nil }
-    return w.words[syl]
+func (noun jumNouns) getWords(syl int) []string {
+    if noun.words == nil { return nil }
+    return noun.words[syl]
 }
 
-func (w jumVerbs) getWords(syl int) []string {
-    if w.words == nil { return nil }
-    return w.words[syl]
+func (verb jumVerbs) getWords(syl int) []string {
+    if verb.words == nil { return nil }
+    return verb.words[syl]
 }
 
-func (w jumAdverbs) getWords(syl int) []string {
-    if w.words == nil { return nil }
-    return w.words[syl]
+func (adv jumAdverbs) getWords(syl int) []string {
+    if adv.words == nil { return nil }
+    return adv.words[syl]
 }
 
-func (w *jumAdjectives) randomWord(syl int) string {
-    return jumRandomWord(w, syl)
+func (adj *jumAdjectives) randomWord(syl int) string {
+    return jumRandomWord(adj, syl)
 }
 
-func (w *jumNouns) randomWord(syl int) string {
-    return jumRandomWord(w, syl)
+func (noun *jumNouns) randomWord(syl int) string {
+    return jumRandomWord(noun, syl)
 }
 
-func (w *jumVerbs) randomWord(syl int) string {
-    return jumRandomWord(w, syl)
+func (verb *jumVerbs) randomWord(syl int) string {
+    return jumRandomWord(verb, syl)
 }
 
-func (w *jumAdverbs) randomWord(syl int) string {
-    res := jumRandomWord(w, syl)
-    return res
+func (adv *jumAdverbs) randomWord(syl int) string {
+    return jumRandomWord(adv, syl)
 }
 
 

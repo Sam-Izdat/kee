@@ -15,6 +15,7 @@ var (
 )
 
 func init() {
+    // Handler for creating Universally Unique Identifiers
     UUID = uuidCtrl{
         &uuidOptions,
         map[string]string{ // Namespaces for Version 3 and 5
@@ -25,9 +26,17 @@ func init() {
             "NIL":     "00000000-0000-0000-0000-000000000000",
         },
     }
+
+    // Handler for creating Fixed Precision Integer Identifiers
     FPIID = fpiidCtrl{&fpiidOptions}
+
+    // Handler for creating Arbitrary Precision Integer Identifiers
     APIID = apiidCtrl{&apiidOptions}
+
+    // Handler for One-time Time Based Passwords
     TOTP  = totpCtrl{&totpOptions}
+
+    // Handler for word-jumble identifiers
     JUMBLE = jumCtrl{ 
         phrase: []jumWord{ 
             &jumAdjectives{}, 
@@ -43,15 +52,19 @@ type handler struct {
     tmpl string
 }
 
+// Generic ID type for custom identifiers
 type GenericID struct {
     idStr string
     idMap map[string]string
 }
 
+
+// Returns canonical string representation
 func (id GenericID) String() string {
     return id.idStr
 }
 
+// Returns a map of specified ID values
 func (id GenericID) Map() map[string]string {
     return id.idMap
 }
@@ -96,6 +109,7 @@ func (p handler) Compose(m map[string]string) (GenericID, error) {
     return inst, nil
 }
 
+// Returns a custom ID handler with provided pattern and template
 func NewHandler(repat string, tmpl string) handler {
     return handler{repat, tmpl}
 }

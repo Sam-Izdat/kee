@@ -34,7 +34,7 @@ var uuidOptions = uuidConfig {
     MaxVer: 5,              // Highest UUID version allowed as valid
     PadB64: true,           // Add padding to base 64 encoded UUIDs
     PadB32: true,           // Add padding to base 32 encoded UUIDs
-    WrapA85: false,         // Wrap ascii 85 encoded UUIDs with <~ ~>
+    WrapA85: false,         // Wrap ASCII 85 encoded UUIDs with <~ ~>
     HyphURL32: true,        // Hyphenate base 32 encoded URL UUIDs
 }
 
@@ -51,9 +51,9 @@ func (c uuidCtrl) newInst(bytes []byte, err error) (uuid, error) {
     if !uuidOptions.AllowInvalid && !res.IsValid() { 
         if len(res.slc) > 0 && res.Arr() == [16]byte{} { 
             // Allow NIL UUID but return error if no override
-            return res, errors.New("NIL UUID set")
+            return res, errors.New("nil UUID set")
         } 
-        return uuid{}, errors.New("Invalid UUID")
+        return uuid{}, errors.New("invalid UUID")
     }
     return res, nil
 }
@@ -140,7 +140,7 @@ func (id *uuid) Hex() string {
     return id.hex
 }
 
-// Generates ascii 85 encoded string representation of UUID
+// Generates ASCII 85 encoded string representation of UUID
 func (id *uuid) A85() string {
     if id.slc == nil || len(id.slc) == 0    { return "" }
     if uuidOptions.Cache && id.a85 != ""    { return id.a85 }
@@ -209,7 +209,7 @@ func (id *uuid) URL32() string {
 func (_ uuidCtrl) fromA85(s string) ([]byte, error) {
     if len(s) == 24 { s = s[2:22] }
     if len(s) != 20 {
-        return []byte{}, errors.New("UUID ascii 85 string is wrong length")
+        return []byte{}, errors.New("string of UUID ASCII 85 is wrong length")
     }
     dst, src := make([]byte, 16), make([]byte, 16)
     src = []byte(s)
@@ -222,7 +222,7 @@ func (_ uuidCtrl) fromB64(s string) ([]byte, error) {
     s = url64ToB64(s)
     if len(s) == 22 { s = strings.Join([]string{s, "=="}, "") }
     if len(s) != 24 {
-        return []byte{}, errors.New("UUID base 64 string is wrong length")
+        return []byte{}, errors.New("string of UUID base 64 is wrong length")
     }
     dst, err := base64.StdEncoding.DecodeString(s)
     if err != nil { return []byte{}, err }
@@ -235,7 +235,7 @@ func (_ uuidCtrl) fromB32(s string) ([]byte, error) {
     s = strings.Replace(s, "=", "", -1) 
     s = strings.ToUpper(s)
     if len(s) != 26 {
-        return []byte{}, errors.New("UUID base 32 string is wrong length")
+        return []byte{}, errors.New("string of UUID base 32 is wrong length")
     }
     s = strings.Join([]string{s, "======"}, "")
     dst, err := base32.StdEncoding.DecodeString(s)
@@ -250,14 +250,14 @@ func (_ uuidCtrl) fromB32(s string) ([]byte, error) {
 func (_ uuidCtrl) fromHex(s string) ([]byte, error) {
     if len(s) == 36+9 {
         if strings.ToLower(s[:9]) != "urn:uuid:" {
-            return []byte{}, errors.New("UUID URN is malformed") 
+            return []byte{}, errors.New("string of UUID URN is malformed") 
         }
         s = s[9:]
     } else if len(s) != 36 {
-        return []byte{}, errors.New("UUID string is wrong length") 
+        return []byte{}, errors.New("string of UUID is wrong length") 
     }
     if s[8] != '-' || s[13] != '-' || s[18] != '-' || s[23] != '-' {
-        return []byte{}, errors.New("Canonical UUID string in wrong format") 
+        return []byte{}, errors.New("canonical UUID string in wrong format") 
     }
     dst := make([]byte, 16)
     for i, x := range []int{
@@ -266,9 +266,9 @@ func (_ uuidCtrl) fromHex(s string) ([]byte, error) {
         14, 16,
         19, 21,
         24, 26, 28, 30, 32, 34} {
-        if v, ok := fromHexOctet(s[x:x+2]); !ok {
-            return []byte{}, errors.New("Bad octet or errant cosmic ray") 
-        } else { dst[i] = v }
+        v, ok := fromHexOctet(s[x:x+2])
+        if !ok { return []byte{}, errors.New("bad octet or errant cosmic ray") }
+        dst[i] = v
     }
     return dst, nil
 }

@@ -96,6 +96,6 @@ Here's what's available, with default values listed:
     MaxVer: 5              // Highest UUID version allowed as valid
     PadB64: true           // Add padding to base 64 encoded UUIDs
     PadB32: true           // Add padding to base 32 encoded UUIDs
-    WrapA85: false         // Wrap ascii 85 encoded UUIDs with <~ ~>
+    WrapA85: false         // Wrap ASCII 85 encoded UUIDs with <~ ~>
     HyphURL32: true        // Hyphenate base 32 encoded URL UUIDs
 ```
