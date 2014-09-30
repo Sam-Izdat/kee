@@ -52,28 +52,28 @@ func (j *jumCtrl) babble(syls []int) (string, uint64) {
     return res, space
 }
 
-// Generates a random phrase and returns jumble "object". 
+// Generates a random phrase and returns KJUMBLE "object". 
 // Takes number of syllables for adjective, noun, verb, adverb respectively. 
 // Pass 0 for syllable count to skip word.
-func (j *jumCtrl) New(sylAdj, sylNoun, sylVerb, sylAdv int) (jumble, error) {
+func (j *jumCtrl) New(sylAdj, sylNoun, sylVerb, sylAdv int) (KJUMBLE, error) {
     syls := []int{sylAdj, sylNoun, sylVerb, sylAdv}
     for _, s := range syls {
-        if s < 0 || s > 4 { return jumble{}, errors.New("bad syllable count") }
+        if s < 0 || s > 4 { return KJUMBLE{}, errors.New("bad syllable count") }
     }
     phrase, space := j.babble(syls)
-    return jumble{phrase, space}, nil
+    return KJUMBLE{phrase, space}, nil
 }
 
-type jumble struct {
+type KJUMBLE struct {
     phrase string
     space uint64
 }
 
-func (m jumble) String() string {
+func (m KJUMBLE) String() string {
     return m.phrase
 }
 
-func (m jumble) SampleSpace() uint64 {
+func (m KJUMBLE) SampleSpace() uint64 {
     return m.space
 }
 

@@ -12,7 +12,7 @@ import (
 )
 
 // TOTP (RFC 6238)
-type totp struct {
+type KTOTP struct {
     slc []byte
     b32 string
 }
@@ -34,30 +34,30 @@ type totpCtrl struct {
 }
 
 // Generate a new secret
-func (c totpCtrl) New() totp {
+func (c totpCtrl) New() KTOTP {
     bytes := make([]byte, 32)
     randomBits(bytes)
-    return totp{slc: bytes}
+    return KTOTP{slc: bytes}
 }
 
 // Set an existing secret
-func (c totpCtrl) Set(bytes []byte) totp {
+func (c totpCtrl) Set(bytes []byte) KTOTP {
     bytesSlc := make([]byte, 32)
     copy(bytesSlc[:], bytes[:])
-    return totp{slc: bytesSlc}
+    return KTOTP{slc: bytesSlc}
 }
 
 // Decode secret from base 32
-func (c totpCtrl) Decode(s string) (totp, error) { 
+func (c totpCtrl) Decode(s string) (KTOTP, error) { 
     reg, err := regexp.Compile("[^A-Za-z0-9]+")
-    if err != nil { return totp{}, err }
+    if err != nil { return KTOTP{}, err }
     s = reg.ReplaceAllString(s, "")
     s = strings.ToUpper(s)
     if expLen := totpGetBlocks() * 4; len(s) != expLen {
         // forgiving case, but rejecting anything less
-        return totp{}, errors.New("secret length incorrect")
+        return KTOTP{}, errors.New("secret length incorrect")
     }
-    return totp{b32: s}, nil // Conversion to byte value intentionally left for later
+    return KTOTP{b32: s}, nil // Conversion to byte value intentionally left for later
 }
 
 // Compare two secrets, return true if they match, false if no match
@@ -68,18 +68,18 @@ func (c totpCtrl) MatchPasswords(exp []uint32, rec uint32) bool {
     return false
 }
 
-// Alias for totp.B32()
-func (id *totp) String() string {
+// Alias for KTOTP.B32()
+func (id *KTOTP) String() string {
     return id.B32()
 }
 
 // Returns secret 32-byte slice
-func (id *totp) Slc() []byte {
+func (id *KTOTP) Slc() []byte {
     return id.slc
 }
 
 // Generates base 32 encoded string representation of secret
-func (id *totp) B32() string {
+func (id *KTOTP) B32() string {
     var res string
     if id.b32 != "" { res = id.b32 } else { 
         res = base32.StdEncoding.EncodeToString(id.slc) 
@@ -92,7 +92,7 @@ func (id *totp) B32() string {
 }
 
 // Returns URI with secret for QR code generation
-func (id *totp) URI(acct, issuer string) string {
+func (id *KTOTP) URI(acct, issuer string) string {
     acct = url.QueryEscape(acct)
     issuer = url.QueryEscape(issuer)
     return "otpauth://totp/"+acct+"?secret="+id.B32()+"&issuer="+issuer
@@ -101,7 +101,7 @@ func (id *totp) URI(acct, issuer string) string {
 // The MIT License (MIT)
 // Copyright (c) 2014 Robbie Vanbrabant
 
-func (id *totp) MakePassword() ([]uint32, error) {
+func (id *KTOTP) MakePassword() ([]uint32, error) {
     // Value must always come from B32 string and not slice directly
     var sec string
     if id.b32 != "" { sec = id.b32 } else { sec = id.B32() }    // critical

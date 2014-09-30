@@ -111,7 +111,7 @@ func setClockSequence(seq int) {
 // Time returns the time in 100s of nanoseconds since 15 Oct 1582 encoded in
 // uuid.  It returns false if uuid is not valid.  The time is only well defined
 // for version 1 and 2 UUIDs.
-func (id uuid) Time() (Time, bool) {
+func (id KUUID) Time() (Time, bool) {
 	bytes := id.slc
 	if len(bytes) != 16 {
 		return 0, false
@@ -125,7 +125,7 @@ func (id uuid) Time() (Time, bool) {
 // ClockSequence returns the clock sequence encoded in uuid.  It returns false
 // if uuid is not valid.  The clock sequence is only well defined for version 1
 // and 2 UUIDs.
-func (id uuid) ClockSequence() (int, bool) {	
+func (id KUUID) ClockSequence() (int, bool) {	
 	bytes := id.slc
 	if len(bytes) != 16 {
 		return 0, false

@@ -10,7 +10,7 @@ import(
 )
 
 // UUID (RFC 4122)
-type uuid struct {
+type KUUID struct {
     slc []byte
     hex string
     a85 string
@@ -43,29 +43,29 @@ type uuidCtrl struct {
     NS map[string]string    // Namespaces
 }
 
-func (c uuidCtrl) newInst(bytes []byte, err error) (uuid, error) {
-    res := uuid{slc: bytes}
+func (c uuidCtrl) newInst(bytes []byte, err error) (KUUID, error) {
+    res := KUUID{slc: bytes}
     if err != nil { // A parsing or other unrecoverable error occured
-        return uuid{}, err
+        return KUUID{}, err
     }
     if !uuidOptions.AllowInvalid && !res.IsValid() { 
         if len(res.slc) > 0 && res.Arr() == [16]byte{} { 
             // Allow NIL UUID but return error if no override
             return res, errors.New("nil UUID set")
         } 
-        return uuid{}, errors.New("invalid UUID")
+        return KUUID{}, errors.New("invalid UUID")
     }
     return res, nil
 }
 
 // Generates a random UUID and returns UUID "object" - alias for NewV4()
-func (c uuidCtrl) New() uuid {
+func (c uuidCtrl) New() KUUID {
     res, _ := c.NewV4() // swallows errors but none should occur
     return res
 }
 
 // Takes a 16 byte array and returns UUID "object"
-func (c uuidCtrl) Set(arr [16]byte) uuid {
+func (c uuidCtrl) Set(arr [16]byte) KUUID {
     bytes := make([]byte, 16)
     bytes = arr[:]
     res, _ := c.newInst(bytes, nil)
@@ -73,7 +73,7 @@ func (c uuidCtrl) Set(arr [16]byte) uuid {
 }
 
 // Decodes UUID from string and returns UUID "object"
-func (c uuidCtrl) Decode(s string) (uuid, error) {
+func (c uuidCtrl) Decode(s string) (KUUID, error) {
     var bytes []byte
     var err error
     switch len(s) {
@@ -97,12 +97,12 @@ func (c uuidCtrl) Decode(s string) (uuid, error) {
     return c.newInst(bytes, err)
 }
 
-func (_ uuidCtrl) Match(ida, idb uuid) bool {
+func (_ uuidCtrl) Match(ida, idb KUUID) bool {
     return ida.Arr() == idb.Arr()
 }
 
 
-func (id uuid) IsValid() (valid bool) {
+func (id KUUID) IsValid() (valid bool) {
     if len(id.slc) != 16 { return false }
     ver := id.Version()
     if uint8(ver) < uuidOptions.MinVer || uint8(ver) > uuidOptions.MaxVer { 
@@ -114,23 +114,23 @@ func (id uuid) IsValid() (valid bool) {
 // -- Produce --
 
 // Alias for uuid.Hex()
-func (id uuid) String() string {
+func (id KUUID) String() string {
     return id.Hex()
 }
 
 // Returns UUID as slice
-func (id uuid) Slc() []byte {
+func (id KUUID) Slc() []byte {
     return id.slc
 }
 
 // Returns UUID as array
-func (id uuid) Arr() (res [16]byte) {
+func (id KUUID) Arr() (res [16]byte) {
     copy(res[:], id.slc[:])
     return 
 }
 
 // Generates canonical hex string representation, as in RFC 4122
-func (id *uuid) Hex() string {
+func (id *KUUID) Hex() string {
     if id.slc == nil || len(id.slc) == 0    { return "" }
     if uuidOptions.Cache && id.hex != ""    { return id.hex }
     u := id.slc
@@ -141,7 +141,7 @@ func (id *uuid) Hex() string {
 }
 
 // Generates ASCII 85 encoded string representation of UUID
-func (id *uuid) A85() string {
+func (id *KUUID) A85() string {
     if id.slc == nil || len(id.slc) == 0    { return "" }
     if uuidOptions.Cache && id.a85 != ""    { return id.a85 }
     bytes := make([]byte, 20)
@@ -153,7 +153,7 @@ func (id *uuid) A85() string {
     return id.a85
 }
 // Generates base 64 encoded string representation of UUID
-func (id *uuid) B64() string {
+func (id *KUUID) B64() string {
     if id.slc == nil || len(id.slc) == 0    { return "" }
     if uuidOptions.Cache && id.b64 != ""    { return id.b64 }
     res := base64.StdEncoding.EncodeToString(id.slc)
@@ -163,7 +163,7 @@ func (id *uuid) B64() string {
 }
 
 // Generates base 32 encoded string representation of UUID
-func (id *uuid) B32() string {
+func (id *KUUID) B32() string {
     if id.slc == nil || len(id.slc) == 0    { return "" }
     if uuidOptions.Cache && id.b32 != ""    { return id.b32 }
     res := base32.StdEncoding.EncodeToString(id.slc)
@@ -173,7 +173,7 @@ func (id *uuid) B32() string {
 }
 
 // Generates hex URN of UUID, as in RFC 2141
-func (id *uuid) URN() string {
+func (id *KUUID) URN() string {
     if id.slc == nil || len(id.slc) == 0    { return "" }
     if uuidOptions.Cache && id.urn != ""    { return id.urn }
     res := []string{"urn:uuid:", id.Hex()}
@@ -182,7 +182,7 @@ func (id *uuid) URN() string {
 }
 
 // Generates a URL-safe base 64 representation UUID
-func (id *uuid) URL64() string {
+func (id *KUUID) URL64() string {
     var res string
     if id.slc == nil || len(id.slc) == 0    { return "" }
     if uuidOptions.Cache && id.url64 != ""  { return id.url64 }
@@ -192,7 +192,7 @@ func (id *uuid) URL64() string {
 }
 
 // Generates a URL-safe base 32 representation of UUID with dashes
-func (id *uuid) URL32() string {
+func (id *KUUID) URL32() string {
     var res string
     if id.slc == nil || len(id.slc) == 0    { return "" }
     if uuidOptions.Cache && id.url32 != ""  { return id.url32 }
@@ -275,7 +275,7 @@ func (_ uuidCtrl) fromHex(s string) ([]byte, error) {
 
 // Variant returns the variant encoded in uuid.  It returns Invalid if
 // uuid is invalid.
-func (id uuid) Variant() uuidVariant {
+func (id KUUID) Variant() uuidVariant {
     bytes := id.slc
     if len(bytes) != 16 {
         return uuidInvalid
@@ -295,7 +295,7 @@ func (id uuid) Variant() uuidVariant {
 
 // Version returns the verison of uuid.  It returns false if uuid is not
 // valid.
-func (id uuid) Version() (uuidVersion) {
+func (id KUUID) Version() (uuidVersion) {
     bytes := id.slc
     if len(bytes) != 16 {
         return uuidVersion(0)

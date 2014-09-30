@@ -91,7 +91,7 @@ func (_ uuidCtrl) setNodeID(id []byte) bool {
 
 // NodeID returns the 6 byte node id encoded in uuid.  It returns nil if uuid is
 // not valid.  The NodeID is only well defined for version 1 and 2 UUIDs.
-func (id uuid) NodeID() []byte {
+func (id KUUID) NodeID() []byte {
 	bytes := id.slc
 	if len(bytes) != 16 {
 		return nil

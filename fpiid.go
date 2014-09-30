@@ -9,7 +9,7 @@ import(
 )
 
 // FPIID (no standard)
-type fpiid struct {
+type KFPIID struct {
     slc []byte
     b64 string
     b32 string
@@ -41,21 +41,21 @@ type fpiidCtrl struct {
 }
 
 // Takes a 8 byte array and returns a FPIID "object"
-func (c fpiidCtrl) FromInt(id uint64) fpiid {
+func (c fpiidCtrl) FromInt(id uint64) KFPIID {
     bytes := make([]byte, 8)
     binary.LittleEndian.PutUint64(bytes, uint64(id))
-    return fpiid{slc: bytes}
+    return KFPIID{slc: bytes}
 }
 
 // Takes a 8 byte array and returns a FPIID "object"
-func (c fpiidCtrl) Set(arr [8]byte) fpiid {
+func (c fpiidCtrl) Set(arr [8]byte) KFPIID {
     bytes := make([]byte, 8)
     bytes = arr[:]
-    return fpiid{slc: bytes}
+    return KFPIID{slc: bytes}
 }
 
 // Decodes FPIID from string and returns a FPIID "object"
-func (c fpiidCtrl) Decode(s string) (fpiid, error) {
+func (c fpiidCtrl) Decode(s string) (KFPIID, error) {
     var bytes []byte
     var err error
     tmp := strings.Replace(s, "=", "", -1)
@@ -73,31 +73,31 @@ func (c fpiidCtrl) Decode(s string) (fpiid, error) {
     case 13:    // B32 uint64 // len 16 with pad
         bytes, err = c.fromB32(s, 64, 16)
     default:
-        return fpiid{slc: []byte{}}, errors.New("unrecognized FPIID encoding")
+        return KFPIID{slc: []byte{}}, errors.New("unrecognized FPIID encoding")
     }
-    return fpiid{slc: bytes}, err
+    return KFPIID{slc: bytes}, err
 }
 
 // -- Produce --
 
-// Alias for fpiid.URL64()
-func (id fpiid) String() string {
+// Alias for KFPIID.URL64()
+func (id KFPIID) String() string {
     return id.URL64()
 }
 
 // Returns FPIID as slice
-func (id fpiid) Slc() []byte {
+func (id KFPIID) Slc() []byte {
     return id.slc
 }
 
 // Returns FPIID as array
-func (id fpiid) Arr() (res [8]byte) {
+func (id KFPIID) Arr() (res [8]byte) {
     copy(res[:], id.slc[:])
     return 
 }
 
 // Returns FPIID as unsigned 64 bit integer
-func (id fpiid) Int() (res uint64) {
+func (id KFPIID) Int() (res uint64) {
     if id.slc == nil || len(id.slc) == 0 { return 0 }
     switch (len(id.slc)) {
     case 2:
@@ -113,7 +113,7 @@ func (id fpiid) Int() (res uint64) {
 }
 
 // Generates base 64 encoded string representation of FPIID
-func (id *fpiid) B64() string {
+func (id *KFPIID) B64() string {
     if id.slc == nil || len(id.slc) == 0 { return "" }
     if fpiidOptions.Cache && id.b64 != "" { return id.b64 }
     var bytes []byte;
@@ -126,7 +126,7 @@ func (id *fpiid) B64() string {
 }
 
 // Generates base 32 encoded string representation of FPIID
-func (id *fpiid) B32() string {
+func (id *KFPIID) B32() string {
     if id.slc == nil || len(id.slc) == 0    { return "" }
     if fpiidOptions.Cache && id.b32 != ""   { return id.b32 }
     var bytes []byte;
@@ -139,7 +139,7 @@ func (id *fpiid) B32() string {
 }
 
 // Generates a URL-safe base 64 representation FPIID
-func (id *fpiid) URL64() string {
+func (id *KFPIID) URL64() string {
     var res string
     if id.slc == nil || len(id.slc) == 0    { return "" }
     if fpiidOptions.Cache && id.url64 != "" { return id.url64 }
@@ -149,7 +149,7 @@ func (id *fpiid) URL64() string {
 }
 
 // Generates a URL-safe base 32 representation of FPIID with dashes
-func (id *fpiid) URL32() string {
+func (id *KFPIID) URL32() string {
     var res string
     if id.slc == nil || len(id.slc) == 0    { return "" }
     if fpiidOptions.Cache && id.url32 != "" { return id.url32 }
@@ -190,7 +190,7 @@ func (_ fpiidCtrl) fromB32(s string, bLen, sLen int) ([]byte, error) {
 
 // -- Helpers --
 
-func fpiidTrimBytes(id *fpiid) []byte {
+func fpiidTrimBytes(id *KFPIID) []byte {
     val := id.Int()
     switch {
     case (val <= maxVal16):

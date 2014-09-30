@@ -18,7 +18,7 @@ import(
 // be set NewUUID returns nil.  If clock sequence has not been set by
 // SetClockSequence then it will be set automatically.  If GetTime fails to
 // return the current NewUUID returns nil.
-func (c uuidCtrl) NewV1() (uuid, error) {
+func (c uuidCtrl) NewV1() (KUUID, error) {
     if node.nodeID == nil {
         c.SetNodeInterface("")
     }
@@ -45,14 +45,14 @@ func (c uuidCtrl) NewV1() (uuid, error) {
 }
 
 // May need some refactoring
-func (c uuidCtrl) NewV2() (uuid, error) {
-    return uuid{}, errors.New("no")
+func (c uuidCtrl) NewV2() (KUUID, error) {
+    return KUUID{}, errors.New("no")
 }
 
 // NewMD5 returns a new MD5 (Version 3) UUID based on the
 // supplied name space and data.
 // Furst
-func (c uuidCtrl) NewV3(id uuid, data []byte) (uuid, error) {
+func (c uuidCtrl) NewV3(id KUUID, data []byte) (KUUID, error) {
     space := id.slc
     return c.newInst(c.newHash(md5.New(), space, data, 3), nil)
 }
@@ -69,7 +69,7 @@ func (c uuidCtrl) NewV3(id uuid, data []byte) (uuid, error) {
 //  means the probability is about 0.00000000006 (6 × 10−11),
 //  equivalent to the odds of creating a few tens of trillions of UUIDs in a
 //  year and having one duplicate.
-func (c uuidCtrl) NewV4() (uuid, error) {
+func (c uuidCtrl) NewV4() (KUUID, error) {
     bytes := make([]byte, 16)
     randomBits(bytes)
     bytes[6] = (bytes[6] & 0x0f) | 0x40 
@@ -79,7 +79,7 @@ func (c uuidCtrl) NewV4() (uuid, error) {
 
 // NewV5 returns a new SHA1 (Version 5) UUID based on the
 // supplied name space and data.
-func (c uuidCtrl) NewV5(id uuid, data []byte) (uuid, error) {
+func (c uuidCtrl) NewV5(id KUUID, data []byte) (KUUID, error) {
     space := id.slc
     return c.newInst(c.newHash(sha1.New(), space, data, 5), nil)
 }
