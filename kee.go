@@ -7,19 +7,19 @@ import (
 )
 
 var (
-    // Handler for creating Universally Unique Identifiers
+    // UUID handler for creating Universally Unique Identifiers
     UUID uuidCtrl   
 
-    // Handler for creating Fixed Precision Integer Identifiers
+    // FPIID handler for creating Fixed Precision Integer Identifiers
     FPIID fpiidCtrl 
 
-    // Handler for creating Arbitrary Precision Integer Identifiers
+    // APIID handler for creating Arbitrary Precision Integer Identifiers
     APIID apiidCtrl 
 
-    // Handler for One-time Time Based Passwords
+    // TOTP handler for One-time Time Based Passwords
     TOTP totpCtrl   
-    
-    // Handler for word-jumble identifiers
+
+    // JUMBLE handler for word-jumble identifiers
     JUMBLE jumCtrl  
 )
 
@@ -109,7 +109,7 @@ func (p handler) Compose(m map[string]string) (GenericID, error) {
     return inst, nil
 }
 
-// Returns a custom ID handler with provided pattern and template
+// NewHandler returns a custom ID handler with provided pattern and template
 func NewHandler(repat string, tmpl string) handler {
     return handler{repat, tmpl}
 }
