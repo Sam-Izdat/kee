@@ -24,14 +24,16 @@ const ( // Maximum values for signed ints
     maxVal64 uint64 = 18446744073709551615
 )
 
-type fpiidConfig struct {
+// FPIIDConfig is the struct for FPIIDOptions. It should only be used if  
+// another handler with a different set of options is being created.
+type FPIIDConfig struct {
     Cache, ShortStr bool
     PadB64, PadB32, HyphURL32 bool
 }
 
 // FPIIDOptions defines the configuration used by the `kee.FPIID` handler.
 // Options can also be changed through `kee.FPIID.Options`.
-var FPIIDOptions = fpiidConfig {
+var FPIIDOptions = FPIIDConfig {
     Cache: true,            // Cache FPIID strings, ignore new options
     ShortStr: true,         // Try conversion to uint32/16 for strings
     PadB64: true,           // Add padding to base 64 encoded FPIIDs
@@ -42,7 +44,7 @@ var FPIIDOptions = fpiidConfig {
 // FPIIDCtrl is a struct for the APIID handler. 
 // Unless another handler with different options is needed simply use instance `kee.FPIID`.
 type FPIIDCtrl struct {
-    Options *fpiidConfig
+    Options *FPIIDConfig
 }
 
 // FromInt takes a [8]byte array and returns a KFPIID instance

@@ -12,6 +12,8 @@ type KAPIID struct {
     bigInt *big.Int
 }
 
+// APIIDConfig is the struct for APIIDOptions. It should only be used if  
+// another handler with a different set of options is being created.
 type apiidConfig struct {
     Cache bool
 }

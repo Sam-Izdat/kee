@@ -18,14 +18,16 @@ type KTOTP struct {
     b32 string
 }
 
-type totpConfig struct {
+// TOTPConfig is the struct for TOTPOptions. It should only be used if  
+// another handler with a different set of options is being created.
+type TOTPConfig struct {
     LookAhead, LookBehind, B32Blocks int
     HyphB32 bool
 }
 
 // TOTPOptions defines the configuration used by the `kee.TOTP` handler.
 // Options can also be changed through `kee.TOTP.Options`.
-var TOTPOptions = totpConfig {
+var TOTPOptions = TOTPConfig {
     LookAhead: 1,           // Allow passwords from n future 30-second blocks
     LookBehind: 1,          // Allow passwords from n previous 30-second blocks
     B32Blocks: 8,           // Secret length (change will invalidate stored pws)
@@ -35,7 +37,7 @@ var TOTPOptions = totpConfig {
 // TOTPCtrl is a struct for the TOTP handler. 
 // Unless another handler with different options is needed simply use instance `kee.TOTP`.
 type TOTPCtrl struct {
-    Options         *totpConfig
+    Options         *TOTPConfig
 }
 
 // New generates a new secret and returns KTOTP instance

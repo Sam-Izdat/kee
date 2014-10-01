@@ -23,7 +23,9 @@ type KUUID struct {
     url32 string
 }
 
-type uuidConfig struct {
+// UUIDConfig is the struct for UUIDOptions. It should only be used if  
+// another handler with a different set of options is being created.
+type UUIDConfig struct {
     Cache, AllowInvalid bool
     MinVer, MaxVer uint8 
     PadB64, PadB32, WrapA85, HyphURL32 bool
@@ -31,7 +33,7 @@ type uuidConfig struct {
 
 // UUIDOptions defines the configuration used by the `kee.UUID` handler.
 // Options can also be changed through `kee.UUID.Options`.
-var UUIDOptions = uuidConfig {
+var UUIDOptions = UUIDConfig {
     Cache: true,            // Cache UUID strings, ignore new options
     AllowInvalid: false,    // Allows setting of non-standard UUIDs
     MinVer: 1,              // Lowest UUID version allowed as valid
@@ -45,7 +47,7 @@ var UUIDOptions = uuidConfig {
 // UUIDCtrl is a struct for the UUID handler. 
 // Unless another handler with different options is needed simply use instance `kee.UUID`.
 type UUIDCtrl struct {
-    Options *uuidConfig
+    Options *UUIDConfig
     NS map[string]string    // Namespaces
 }
 
