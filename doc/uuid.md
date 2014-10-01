@@ -7,15 +7,15 @@ UUIDs, as described by RFC 4122, can be represented as:
 - Base 64 / URL-safe base 64 string
 - Base 32 / URL-safe base 32 string
 
-Conversion functions are methods of the `kee.uuid` type, returned when a UUID is generated or assigned using any of these functions:
+Conversion functions are methods of the `kee.KUUID` type, returned when a UUID is generated or assigned using any of these functions:
 
-- `func UUID.New() uuid`
-- `func UUID.NewV1() (uuid, error)`
-- `func UUID.NewV3(id uuid, data []byte) (uuid, error)`
-- `func UUID.NewV4() (uuid, error)`
-- `func UUID.NewV5(id uuid, data []byte) (uuid, error)`
-- `func UUID.Set(arr [16]byte) (uuid, error)`
-- `func UUID.Decode(s string) (uuid, error)`
+- `func UUID.New() KUUID`
+- `func UUID.NewV1() (KUUID, error)`
+- `func UUID.NewV3(id KUUID, data []byte) (KUUID, error)`
+- `func UUID.NewV4() (KUUID, error)`
+- `func UUID.NewV5(id KUUID, data []byte) (KUUID, error)`
+- `func UUID.Set(arr [16]byte) (KUUID, error)`
+- `func UUID.Decode(s string) (KUUID, error)`
 
 ###Generating
 There are several ways to create UUIDs and different versions serve somewhat different purposes. If in doubt, stick with Version 4. Take a look at [IETF's RFC](http://www.ietf.org/rfc/rfc4122.txt) for complete details.

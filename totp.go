@@ -109,7 +109,7 @@ func (id *KTOTP) URI(acct, issuer string) string {
 // The MIT License (MIT)
 // Copyright (c) 2014 Robbie Vanbrabant
 
-// MakePassword a slice of 6-digit time based passwords
+// MakePassword returns a slice of 6-digit time based passwords
 func (id *KTOTP) MakePassword() ([]uint32, error) {
     // Value must always come from B32 string and not slice directly
     var sec string

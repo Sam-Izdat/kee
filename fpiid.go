@@ -87,7 +87,7 @@ func (c FPIIDCtrl) Decode(s string) (KFPIID, error) {
 
 // -- Produce --
 
-// String is alias for URL64()
+// String is alias for URL64
 func (id KFPIID) String() string {
     return id.URL64()
 }

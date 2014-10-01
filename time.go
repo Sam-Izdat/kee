@@ -69,7 +69,7 @@ func getTime() (Time, error) {
 // ClockSequence returns the current clock sequence, generating one if not
 // already set.  The clock sequence is only used for Version 1 UUIDs.
 //
-// The uuid package does not use global static storage for the clock sequence or
+// The UUID package does not use global static storage for the clock sequence or
 // the last time a UUID was generated.  Unless SetClockSequence a new random
 // clock sequence is generated the first time a clock sequence is requested by
 // ClockSequence, GetTime, or NewUUID.  (section 4.2.1.1) sequence is generated
@@ -109,7 +109,7 @@ func setClockSequence(seq int) {
 }
 
 // Time returns the time in 100s of nanoseconds since 15 Oct 1582 encoded in
-// uuid.  It returns false if uuid is not valid.  The time is only well defined
+// UUID.  It returns false if UUID is not valid.  The time is only well defined
 // for version 1 and 2 UUIDs.
 func (id KUUID) Time() (Time, bool) {
 	bytes := id.slc
@@ -122,8 +122,8 @@ func (id KUUID) Time() (Time, bool) {
 	return Time(time), true
 }
 
-// ClockSequence returns the clock sequence encoded in uuid.  It returns false
-// if uuid is not valid.  The clock sequence is only well defined for version 1
+// ClockSequence returns the clock sequence encoded in UUID.  It returns false
+// if UUID is not valid.  The clock sequence is only well defined for version 1
 // and 2 UUIDs.
 func (id KUUID) ClockSequence() (int, bool) {	
 	bytes := id.slc
