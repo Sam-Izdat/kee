@@ -6,9 +6,30 @@ import(
     "path"
     "os"
     "log"
+	"fmt"
     "bufio"
     "errors"
 )
+
+var(
+	jumCustomDictPath = ""
+)
+
+// Path to the repository of "words" used to generate Jumbles.
+// By default this path will be the location of the library source.
+func SetJumbleDictionary(p string) error {
+	for _, kind := range []string{"adjectives", "verbs", "nouns", "adverbs"} {
+		for i := 1; i < 5; i++ {
+			txt := path.Join(p, kind,
+				fmt.Sprintf("%dsyllable%s.txt", i, kind))
+			if _, err := os.Stat(txt); err != nil {
+				return fmt.Errorf("invalid jumble dictionary: expected to find %s", txt)
+			}
+		}
+	}
+	jumCustomDictPath = p
+	return nil
+}
 
 type jumAdjectives struct {
     files []string
@@ -213,9 +234,16 @@ func jumRandomWord(w jumWord, syl int) string {
     return res
 }
 
+func jumDictPath() string {
+	if jumCustomDictPath != "" {
+		return jumCustomDictPath
+	}
+	_, cwd,_,_ := runtime.Caller(1)
+	return path.Join(path.Dir(cwd), "words")
+}
+
 func jumReadFile(subdir, fn string) []string {
-    _, cwd, _, _ := runtime.Caller(1)
-    dir := path.Join(path.Dir(cwd), "words", subdir, fn)
+    dir := path.Join(jumDictPath(), subdir, fn)
     file, err := os.Open(dir)
     if err != nil {
         log.Fatal(err)
