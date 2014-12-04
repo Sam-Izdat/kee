@@ -274,11 +274,11 @@ What's provided is really just scaffolding for anyone wishing to follow the conv
 ```
 - Arbitrary-precision integers are really arbitrary in size just as their encoded versions are in length. If you plan on counting past eighteen quintillion or dividing by zero please mind the constraints and fasten appropriate protective head gear.
 ```go
-    id := kee.APIID.New("18446744073709551615") 
+    id := kee.APIID.FromString("18446744073709551615") 
     fmt.Println(id.BigInt().Uint64())  // => 18446744073709551615
-    id = kee.APIID.New("18446744073709551616") // uint64 will overflow
+    id = kee.APIID.FromString("18446744073709551616") // uint64 will overflow
     fmt.Println(id.BigInt().Uint64())  // => 0
-    id = kee.APIID.New("28446744073709551616") 
+    id = kee.APIID.FromString("28446744073709551616") 
     fmt.Println(id.BigInt().Uint64())  // => 10000000000000000000
     fmt.Println(id.BigInt())           // => 28446744073709551616
 ```
