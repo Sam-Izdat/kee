@@ -1,9 +1,9 @@
 ##Arbitrary Precision Integer Identifiers
-APIIDs can be positive integers of any size and are represented as base 10 or base 58 strings and `big.Int` only. They can be:
+APIIDs can be positive integers of any size and are represented as base 10 or base 52 strings and `big.Int` only. They can be:
 
 - Byte slice
 - `big.Int` integer (from "math/big" of the standard library)
-- Base 58 string
+- Base 52 string
 
 ###Generating from integer
 ```go
