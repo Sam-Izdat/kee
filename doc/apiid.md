@@ -7,12 +7,12 @@ APIIDs can be positive integers of any size and are represented as base 10 or ba
 
 ###Generating from integer
 ```go
-    id1 := kee.APIID.New("12345678901234567890123456789")
+    id1 := kee.APIID.FromString("12345678901234567890123456789")
         // ... OR:
     id2 := kee.APIID.FromInt(123456789)
         // ... OR:
     myInt := 12345
-    id3 := kee.APIID.New(strconv.Itoa(myInt))   // Must be string
+    id3 := kee.APIID.FromString(strconv.Itoa(myInt))   // Must be string
 
     fmt.Println(id1, "&", id3) // => KEm5phz2fXwaGwm6 & 4ER
 ```
