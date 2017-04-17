@@ -1,4 +1,4 @@
-##Fixed Precision Integer Identifiers
+## Fixed Precision Integer Identifiers
 FPIIDs accept only unsigned 64 bit integers but, by default, they are converted to 32 or 16 bits whenever possible *for the purposes of base 64/32 string encoding*. This can be disabled by setting the `ShortStr` option to `false`. Slices, arrays and integers will always return as 8 bytes. FPIIDs can be represented as:
 
 - Byte slice/array
@@ -6,7 +6,7 @@ FPIIDs accept only unsigned 64 bit integers but, by default, they are converted 
 - Base 64 / URL-safe base 64 string
 - Base 32 / URL-safe base 32 string
 
-###Generating from integer
+### Generating from integer
 ```go
     id1 := kee.FPIID.New(555555555555555)
         // ...OR:
@@ -16,11 +16,11 @@ FPIIDs accept only unsigned 64 bit integers but, by default, they are converted 
     // String method defaults to URL-safe base 64
     fmt.Println(id1, "&", id2) // => 47iKW0b5AQA & OTA
 ```
-###Setting bytes
+### Setting bytes
 ```go
     id := kee.FPIID.Set([8]byte{255, 255, 255, 255, 255, 255, 255, 255})
 ```
-###Encoding
+### Encoding
 ```go
     fmt.Println(id.Int())       // Unsigned 64 bit int
     fmt.Println(id.B64())       // Base 64
@@ -31,12 +31,12 @@ FPIIDs accept only unsigned 64 bit integers but, by default, they are converted 
     fmt.Println(id.Slc())       // Slice
     fmt.Println(id.Arr())       // Array
 ```
-###Decoding
+### Decoding
 ```go
     id1 := kee.FPIID.Decode("4O4I-UW2G-7EAQ-A")  // dashes allowed
     id2 := kee.FPIID.Decode("sct0AA==")          // padding optional
 ```
-###Options
+### Options
 ```
     Cache: true            // Cache FPIID strings, ignore new options
     ShortStr: true         // Try conversion to uint32/16 for strings

@@ -5,12 +5,12 @@
 
 It handles UUIDs/GUIDs, integer identifiers and custom IDs with regular grammar. It also does TOTPs (time-based one time passwords), because that's vaguely related, fits the API and makes the name kind of a pun. Oh, and it generates incoherent nonsense too, if that's your thing.
 
-##Why?
+## Why?
 
 Because fumbling with identifiers and encodings, despite the extensive standard library, is a tedious, somewhat error-prone process that eventually tends to fill a code base with spaghetti. Also, random IDs like "SoppyClownGallopsAimlessly" are a *lot* more fun than using AUTO_INCREMENT.
 
 
-##Install
+## Install
 Grab the package with: 
 
     $ go get github.com/Sam-Izdat/kee
@@ -19,7 +19,7 @@ Grab the package with:
 [![License MIT](http://img.shields.io/badge/license-MIT-red.svg?style=flat-square)](http://opensource.org/licenses/MIT)
 [![GoDoc](http://img.shields.io/badge/doc-REFERENCE-blue.svg?style=flat-square)](https://godoc.org/github.com/Sam-Izdat/kee)
 
-##Basic usage
+## Basic usage
 
 ```go
 package main
@@ -38,11 +38,11 @@ func main() {
 }
 ```
 
-##Making it useful
+## Making it useful
 
 But wait, there's more...
 
-###The universal and the global
+### The universal and the global
 
 ```go
 // Get a random UUID
@@ -80,7 +80,7 @@ The `Decode` method of the UUID handler accepts any valid string output listed a
 
 See documentation or source for UUIDs other than Version 4.
 
-###The less cosmopolitan identifiers
+### The less cosmopolitan identifiers
 
 ```go
 // Make a fixed precision integer identifier
@@ -113,7 +113,7 @@ Available methods for APIID output are: `Slc`, `BigInt`, and `B58`.
 
 The `Decode` method of the FPIID/APIID handlers accepts any valid string output listed above.
 
-###SplendidToucanVanishDarkly
+### SplendidToucanVanishDarkly
 
 ```go
 // ScrawlyFittersFlounderWhither
@@ -131,7 +131,7 @@ fmt.Println(wut, wut.SampleSpace())
 ```
 FatiguedPhalangeTriggingBackward? InboundClaptrapPreludesNudely.
 
-###Multi-factor authentication
+### Multi-factor authentication
 
 ```go
 // Generate a secret
@@ -161,7 +161,7 @@ openSafe := kee.TOTP.MatchPasswords(expected, received)
 ```
 This is generally intended for mobile devices and works with the [Google Authenticator](https://play.google.com/store/apps/details?id=com.google.android.apps.authenticator2&hl=en) application.
 
-##Advanced usage
+## Advanced usage
 
 An ID instance comes from the handler of its respective type:
 - `UUID` for *Universally/Globally Unique Identifiers*
@@ -286,11 +286,11 @@ What's provided is really just scaffolding for anyone wishing to follow the conv
 - Some JUMBLE words are quite long. If storing phrases in a database, allow for at least 100 characters. Unless words are omitted, the sample space is usually very large but still well below a UUID; checking for collisions is a good idea.
 - Please, dear god, don't try to parse email addresses with regular expressions. You have been warned.
 
-#What still needs doin'
+# What still needs doin'
 - Complete unit tests
 - Some base set of built-in regular expressions for parsing common identifiers
 
-#Attributions
+# Attributions
 Code or content anonymously pinched from:
 
 - Tommi Virtanen: [base58](https://github.com/tv42/base58)
@@ -299,6 +299,6 @@ Code or content anonymously pinched from:
 - Ashley Bovan: [word lists](http://www.ashley-bovan.co.uk/words/partsofspeech.html)
 - [WPZOOM](http://www.wpzoom.com/): key icon used above (Attribution-Share Alike 3.0)
 
-#License
+# License
 
 MIT with some BSD-licensed snippets

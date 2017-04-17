@@ -1,4 +1,4 @@
-##UUIDs/GUIDs
+## UUIDs/GUIDs
 UUIDs, as described by RFC 4122, can be represented as:
 - Byte slice/array
 - Canonical hexadecimal string
@@ -17,7 +17,7 @@ Conversion functions are methods of the `kee.KUUID` type, returned when a UUID i
 - `func UUID.Set(arr [16]byte) (KUUID, error)`
 - `func UUID.Decode(s string) (KUUID, error)`
 
-###Generating
+### Generating
 There are several ways to create UUIDs and different versions serve somewhat different purposes. If in doubt, stick with Version 4. Take a look at [IETF's RFC](http://www.ietf.org/rfc/rfc4122.txt) for complete details.
 ```go
     // Version 4 (Random) UUID  -- most common version
@@ -39,12 +39,12 @@ There are several ways to create UUIDs and different versions serve somewhat dif
     // Version 5 (SHA1) UUID (much like V3)
     idv5 := kee.UUID.NewV5(domain1, data)
 ```
-###Setting bytes
+### Setting bytes
 ```go
     bytes := [16]byte{96, 109, 186, 97, 248, 73, 72, 5, 155, 122, 167, 157, 88, 212, 217, 94}
     id, err := kee.UUID.Set(bytes)
 ```
-###Encoding
+### Encoding
 Encoding is straightforward. Different encodings have different advantages and drawbacks.
 ```go
     // Print hex
@@ -69,7 +69,7 @@ Encoding is straightforward. Different encodings have different advantages and d
     fmt.Println(id.Slc())
     fmt.Println(id.Arr()) 
 ```
-###Decoding
+### Decoding
 Any string generated can be decoded, whatever the encoding. Checking the error value instead of ignoring it with an underscore is advised.
 ```go
     id1, _ := kee.UUID.Decode("urn:uuid:4769491a-7237-4e06-a60a-cc3098563df1")
@@ -82,7 +82,7 @@ Any string generated can be decoded, whatever the encoding. Checking the error v
     fmt.Println(id3, id4)
     // => 4769491a-7237-4e06-a60a-cc3098563df1 4769491a-7237-4e06-a60a-cc3098563df1
 ```
-###Options
+### Options
 Options can be set with  `kee.UUID.Options`, e.g.
 
 ```go
