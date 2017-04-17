@@ -1,11 +1,11 @@
-##Arbitrary Precision Integer Identifiers
+## Arbitrary Precision Integer Identifiers
 APIIDs can be positive integers of any size and are represented as base 10 or base 58 strings and `big.Int` only. They can be:
 
 - Byte slice
 - `big.Int` integer (from "math/big" of the standard library)
 - Base 58 string
 
-###Generating from integer
+### Generating from integer
 ```go
     id1 := kee.APIID.FromString("12345678901234567890123456789")
         // ... OR:
@@ -16,12 +16,12 @@ APIIDs can be positive integers of any size and are represented as base 10 or ba
 
     fmt.Println(id1, "&", id3) // => KEm5phz2fXwaGwm6 & 4ER
 ```
-###Setting bytes
+### Setting bytes
 ```go
     // Must be slice
     id := kee.APIID.Set([]byte{11, 22, 33, 44}) // 185999660
 ```
-###Encoding
+### Encoding
 ```go
     fmt.Println(id)                     // Base 58
     fmt.Println(id.B58())               //   "
@@ -29,11 +29,11 @@ APIIDs can be positive integers of any size and are represented as base 10 or ba
     fmt.Println(id.BigInt().String())   // String
     fmt.Println(id.Slc())               // Slice
 ```
-###Decoding
+### Decoding
 ```go
     id := kee.APIID.Decode("hridG") // 185999660
 ```
-###Options
+### Options
 ```
     Cache: true            // Cache APIID strings, ignore new options
 ```
